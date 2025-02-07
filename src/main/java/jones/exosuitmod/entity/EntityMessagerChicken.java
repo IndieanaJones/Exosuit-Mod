@@ -45,14 +45,22 @@ public class EntityMessagerChicken extends EntityCreature
         this.timeUntilNextEgg = this.rand.nextInt(6000) + 6000;
     }
 
-    public void onLeftClickPressed()
+    public void onLeftClickPressed(boolean pressed)
     {
-
+        if(this.world.isRemote)
+            return;
+        if(!leftClickPressed && pressed)
+        {
+            this.playLivingSound();
+        }
+        leftClickPressed = pressed;
     }
 
-    public void onRightClickPressed()
+    public void onRightClickPressed(boolean pressed)
     {
-
+        if(this.world.isRemote)
+            return;
+        rightClickPressed = pressed;
     }
 
     public float getEyeHeight()
@@ -70,6 +78,8 @@ public class EntityMessagerChicken extends EntityCreature
     public void onLivingUpdate()
     {
         super.onLivingUpdate();
+
+        livingSoundTime = -1;
         if(lastTimeHitCountdown > 0)
             lastTimeHitCountdown -= 1;
 

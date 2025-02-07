@@ -1,6 +1,8 @@
 package jones.exosuitmod.event;
 
 import jones.exosuitmod.entity.EntityMessagerChicken;
+import jones.exosuitmod.network.PacketInit;
+import jones.exosuitmod.network.packets.PacketSendClick;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -34,13 +36,24 @@ public class EventHandler
         messagerChicken.setJumping(isJumping);
     }
 
-    @SideOnly(Side.CLIENT)
-    @SubscribeEvent(priority = EventPriority.NORMAL, receiveCanceled = true)
+    public static boolean leftClickPressed = false;
+    public static boolean rightClickPressed = false;
+    @SubscribeEvent(priority = EventPriority.NORMAL)
     public static void onInputEvent(InputEvent event)
     {
         EntityPlayer player = Minecraft.getMinecraft().player;
-        if (!player.isRiding() || !(player.getRidingEntity() instanceof EntityMessagerChicken))
+        if (!player.world.isRemote || !player.isRiding() || !(player.getRidingEntity() instanceof EntityMessagerChicken))
             return;
+        if(Minecraft.getMinecraft().gameSettings.keyBindAttack.isKeyDown() != leftClickPressed)
+        {
+            PacketInit.PACKET_HANDLER_INSTANCE.sendToServer(new PacketSendClick(player, 0, Minecraft.getMinecraft().gameSettings.keyBindAttack.isKeyDown()));
+            leftClickPressed = Minecraft.getMinecraft().gameSettings.keyBindAttack.isKeyDown();
+        }
+        if(Minecraft.getMinecraft().gameSettings.keyBindUseItem.isKeyDown() != rightClickPressed)
+        {
+            PacketInit.PACKET_HANDLER_INSTANCE.sendToServer(new PacketSendClick(player, 1, Minecraft.getMinecraft().gameSettings.keyBindUseItem.isKeyDown()));
+            rightClickPressed = Minecraft.getMinecraft().gameSettings.keyBindUseItem.isKeyDown();
+        }
     }
 
     //Don't pick up items while in an exosuit.

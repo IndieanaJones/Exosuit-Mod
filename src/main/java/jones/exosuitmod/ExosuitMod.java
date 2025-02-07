@@ -1,7 +1,7 @@
 package jones.exosuitmod;
 
 //import jones.exosuitmod.keybindings.KeybindingInit;
-//import jones.exosuitmod.network.PacketInit;
+import jones.exosuitmod.network.PacketInit;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -19,7 +19,7 @@ public class ExosuitMod
     @Mod.EventHandler
     public static void preInit(FMLPreInitializationEvent event) 
     {
-    	//PacketInit.registerMessages(event);
+    	PacketInit.registerMessages(event);
     }
 
     @Mod.EventHandler
