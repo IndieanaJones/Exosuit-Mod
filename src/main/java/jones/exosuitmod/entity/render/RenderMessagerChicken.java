@@ -1,5 +1,6 @@
 package jones.exosuitmod.entity.render;
 
+import jones.exosuitmod.ExosuitMod;
 import jones.exosuitmod.entity.EntityMessagerChicken;
 import net.minecraft.client.model.ModelChicken;
 import net.minecraft.client.renderer.entity.RenderLiving;
@@ -12,7 +13,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderMessagerChicken extends RenderLiving<EntityMessagerChicken>
 {
-    private static final ResourceLocation CHICKEN_TEXTURES = new ResourceLocation("textures/entity/chicken.png");
+    private static final ResourceLocation CHICKEN_TEXTURES = new ResourceLocation(ExosuitMod.MODID + ":textures/entity/messager_chicken.png");
 
     public RenderMessagerChicken(RenderManager p_i47211_1_)
     {

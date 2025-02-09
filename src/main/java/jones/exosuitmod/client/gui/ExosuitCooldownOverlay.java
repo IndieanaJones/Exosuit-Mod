@@ -1,4 +1,4 @@
-package jones.exosuitmod.client;
+package jones.exosuitmod.client.gui;
 
 import jones.exosuitmod.ExosuitMod;
 import net.minecraft.client.Minecraft;
@@ -14,9 +14,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @Mod.EventBusSubscriber
-public class ExosuitHealthbarOverlay extends Gui
+public class ExosuitCooldownOverlay extends Gui
 {
-    private static final ResourceLocation EXOSUITHEART = new ResourceLocation(ExosuitMod.MODID + ":textures/client/gui/exosuitheart.png");
+    private static final ResourceLocation EXOSUITUI = new ResourceLocation(ExosuitMod.MODID + ":textures/client/gui/exosuitui.png");
 
     public static final ExosuitHealthbarOverlay INSTANCE = new ExosuitHealthbarOverlay();
 
@@ -32,7 +32,7 @@ public class ExosuitHealthbarOverlay extends Gui
 
         int left_align = resolution.getScaledWidth() / 2 - 91;
 
-        Minecraft.getMinecraft().getTextureManager().bindTexture(EXOSUITHEART);
+        Minecraft.getMinecraft().getTextureManager().bindTexture(EXOSUITUI);
         GlStateManager.enableBlend();
         EntityLivingBase mount = (EntityLivingBase)tmp;
         int health = (int)Math.ceil((double)mount.getHealth());

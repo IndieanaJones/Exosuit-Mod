@@ -1,7 +1,7 @@
 package jones.exosuitmod.event;
 
-import jones.exosuitmod.client.ExosuitHealthbarOverlay;
-import jones.exosuitmod.entity.EntityMessagerChicken;
+import jones.exosuitmod.client.gui.ExosuitHealthbarOverlay;
+import jones.exosuitmod.entity.AbstractExosuit;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,7 +24,7 @@ public class EventRenderHandler
     public static void onPlayerRender(RenderPlayerEvent.Pre event)
     {
         EntityPlayer player = event.getEntityPlayer();
-        if (!player.isRiding() || !(player.getRidingEntity() instanceof EntityMessagerChicken))
+        if (!player.isRiding() || !(player.getRidingEntity() instanceof AbstractExosuit))
             return;
         event.setCanceled(true);
     }
@@ -32,7 +32,7 @@ public class EventRenderHandler
     //Don't render an exosuit the player is riding in if they're in first person.
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
-    public static void onEntityRender(RenderLivingEvent.Pre<EntityMessagerChicken> event)
+    public static void onEntityRender(RenderLivingEvent.Pre<AbstractExosuit> event)
     {
         EntityLivingBase exosuit = event.getEntity();
         if(!exosuit.isBeingRidden() || exosuit.getControllingPassenger() != Minecraft.getMinecraft().player)
@@ -49,7 +49,7 @@ public class EventRenderHandler
 		if(event.getType() != RenderGameOverlayEvent.ElementType.HOTBAR)
             return;
         EntityPlayer player = Minecraft.getMinecraft().player;
-        if (!player.isRiding() || !(player.getRidingEntity() instanceof EntityMessagerChicken))
+        if (!player.isRiding() || !(player.getRidingEntity() instanceof AbstractExosuit))
             return;
         event.setCanceled(true);
 	}
@@ -60,7 +60,7 @@ public class EventRenderHandler
     public static void RenderHandFirstPerson(RenderHandEvent event)
     {
         EntityPlayer player = Minecraft.getMinecraft().player;
-        if (!player.isRiding() || !(player.getRidingEntity() instanceof EntityMessagerChicken))
+        if (!player.isRiding() || !(player.getRidingEntity() instanceof AbstractExosuit))
             return;
         event.setCanceled(true);
     }
@@ -71,7 +71,7 @@ public class EventRenderHandler
 	public static void onRenderHealthBar(RenderGameOverlayEvent.Pre event)
 	{
         EntityPlayer player = Minecraft.getMinecraft().player;
-        if (!player.isRiding() || !(player.getRidingEntity() instanceof EntityMessagerChicken))
+        if (!player.isRiding() || !(player.getRidingEntity() instanceof AbstractExosuit))
         return;
 		if(event.getType() == ElementType.HEALTHMOUNT)
 		{

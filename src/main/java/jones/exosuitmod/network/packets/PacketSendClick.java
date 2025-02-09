@@ -3,7 +3,7 @@ package jones.exosuitmod.network.packets;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import io.netty.buffer.ByteBuf;
-import jones.exosuitmod.entity.EntityMessagerChicken;
+import jones.exosuitmod.entity.AbstractExosuit;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -45,15 +45,15 @@ public class PacketSendClick implements IMessage
             EntityPlayer player = (EntityPlayer)server.getEntityByID(message.entityID);
             if (player == null || player.world.isRemote)
                 return null;
-            if (!player.isRiding() || !(player.getRidingEntity() instanceof EntityMessagerChicken))
+            if (!player.isRiding() || !(player.getRidingEntity() instanceof AbstractExosuit))
                 return null;
 
-            EntityMessagerChicken messagerChicken = (EntityMessagerChicken) player.getRidingEntity();
+            AbstractExosuit exosuit = (AbstractExosuit) player.getRidingEntity();
 
             if(message.clickType == 0)
-                messagerChicken.onLeftClickPressed(message.setPressed);
+                exosuit.onLeftClickPressed(message.setPressed);
             else
-                messagerChicken.onRightClickPressed(message.setPressed);
+                exosuit.onRightClickPressed(message.setPressed);
             
             return null;
         }

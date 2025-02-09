@@ -1,6 +1,6 @@
 package jones.exosuitmod.event;
 
-import jones.exosuitmod.entity.EntityMessagerChicken;
+import jones.exosuitmod.entity.AbstractExosuit;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -14,7 +14,7 @@ public class EventInteractionHandler
     public static void onEntitySpecificInteractEvent(PlayerInteractEvent.EntityInteractSpecific event)
     {
         EntityPlayer player = event.getEntityPlayer();
-        if (!player.isRiding() || !(player.getRidingEntity() instanceof EntityMessagerChicken))
+        if (!player.isRiding() || !(player.getRidingEntity() instanceof AbstractExosuit))
             return;
         event.setCanceled(true);
     }
@@ -23,7 +23,7 @@ public class EventInteractionHandler
     public static void onEntityInteractEvent(PlayerInteractEvent.EntityInteract event)
     {
         EntityPlayer player = event.getEntityPlayer();
-        if (!player.isRiding() || !(player.getRidingEntity() instanceof EntityMessagerChicken))
+        if (!player.isRiding() || !(player.getRidingEntity() instanceof AbstractExosuit))
             return;
         event.setCanceled(true);
     }
@@ -32,7 +32,7 @@ public class EventInteractionHandler
     public static void onRightClickBlock (PlayerInteractEvent.RightClickBlock event)
     {
         EntityPlayer player = event.getEntityPlayer();
-        if (!player.isRiding() || !(player.getRidingEntity() instanceof EntityMessagerChicken))
+        if (!player.isRiding() || !(player.getRidingEntity() instanceof AbstractExosuit))
             return;
         event.setCanceled(true);
     }
@@ -41,7 +41,7 @@ public class EventInteractionHandler
     public static void onRightClickItemEvent (PlayerInteractEvent.RightClickItem event)
     {
         EntityPlayer player = event.getEntityPlayer();
-        if (!player.isRiding() || !(player.getRidingEntity() instanceof EntityMessagerChicken))
+        if (!player.isRiding() || !(player.getRidingEntity() instanceof AbstractExosuit))
             return;
         event.setCanceled(true);
     }
@@ -50,7 +50,7 @@ public class EventInteractionHandler
     public static void onLeftClickBlock (PlayerInteractEvent.LeftClickBlock event)
     {
         EntityPlayer player = event.getEntityPlayer();
-        if (!player.isRiding() || !(player.getRidingEntity() instanceof EntityMessagerChicken))
+        if (!player.isRiding() || !(player.getRidingEntity() instanceof AbstractExosuit))
             return;
         event.setCanceled(true);
     }
@@ -59,7 +59,7 @@ public class EventInteractionHandler
     public static void onPlayerAttack (AttackEntityEvent event)
     {
         EntityPlayer player = event.getEntityPlayer();
-        if (!player.isRiding() || !(player.getRidingEntity() instanceof EntityMessagerChicken))
+        if (!player.isRiding() || !(player.getRidingEntity() instanceof AbstractExosuit))
             return;
         event.setCanceled(true);
     }

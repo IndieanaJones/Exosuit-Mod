@@ -1,6 +1,6 @@
 package jones.exosuitmod.event;
 
-import jones.exosuitmod.entity.EntityMessagerChicken;
+import jones.exosuitmod.entity.AbstractExosuit;
 import jones.exosuitmod.network.PacketInit;
 import jones.exosuitmod.network.packets.PacketSendClick;
 import net.minecraft.client.Minecraft;
@@ -28,12 +28,12 @@ public class EventHandler
 	public static void onUpdateInput(InputUpdateEvent event)
     {
         EntityPlayer player = event.getEntityPlayer();
-        if (!player.isRiding() || !(player.getRidingEntity() instanceof EntityMessagerChicken))
+        if (!player.isRiding() || !(player.getRidingEntity() instanceof AbstractExosuit))
             return;
 
         boolean isJumping = event.getMovementInput().jump;
-        EntityMessagerChicken messagerChicken = (EntityMessagerChicken) player.getRidingEntity();
-        messagerChicken.setJumping(isJumping);
+        AbstractExosuit exosuit = (AbstractExosuit) player.getRidingEntity();
+        exosuit.setJumping(isJumping);
     }
 
     public static boolean leftClickPressed = false;
@@ -42,7 +42,7 @@ public class EventHandler
     public static void onInputEvent(InputEvent event)
     {
         EntityPlayer player = Minecraft.getMinecraft().player;
-        if (!player.world.isRemote || !player.isRiding() || !(player.getRidingEntity() instanceof EntityMessagerChicken))
+        if (!player.world.isRemote || !player.isRiding() || !(player.getRidingEntity() instanceof AbstractExosuit))
             return;
         if(Minecraft.getMinecraft().gameSettings.keyBindAttack.isKeyDown() != leftClickPressed)
         {
@@ -61,7 +61,7 @@ public class EventHandler
     public static void pickupItem(EntityItemPickupEvent event)
     {
         EntityPlayer player = event.getEntityPlayer();
-        if (!player.isRiding() || !(player.getRidingEntity() instanceof EntityMessagerChicken))
+        if (!player.isRiding() || !(player.getRidingEntity() instanceof AbstractExosuit))
             return;
         event.setCanceled(true);
     }
@@ -74,7 +74,7 @@ public class EventHandler
         if(!(event.getEntity() instanceof EntityPlayer))
             return;
         EntityPlayer player = (EntityPlayer)event.getEntity();
-        if (!player.isRiding() || !(player.getRidingEntity() instanceof EntityMessagerChicken))
+        if (!player.isRiding() || !(player.getRidingEntity() instanceof AbstractExosuit))
             return;
         event.setCanceled(true);
     }
@@ -83,7 +83,7 @@ public class EventHandler
     @SubscribeEvent
     public static void onPlayerTickEvent(PlayerTickEvent event)
     {
-        if (!event.player.isRiding() || !(event.player.getRidingEntity() instanceof EntityMessagerChicken))
+        if (!event.player.isRiding() || !(event.player.getRidingEntity() instanceof AbstractExosuit))
             return;
         event.player.noClip = true;
         event.player.setSize(0.0F, 0.0F);
@@ -97,7 +97,7 @@ public class EventHandler
         if (!(event.getTarget() instanceof EntityPlayer))
         	return;
         EntityPlayer player = (EntityPlayer)event.getTarget();
-        if (!player.isRiding() || !(player.getRidingEntity() instanceof EntityMessagerChicken))
+        if (!player.isRiding() || !(player.getRidingEntity() instanceof AbstractExosuit))
             return;
         if(!(event.getEntity() instanceof EntityLiving))
             return;

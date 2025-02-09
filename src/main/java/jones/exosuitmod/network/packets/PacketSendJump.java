@@ -4,7 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import io.netty.buffer.ByteBuf;
-import jones.exosuitmod.entity.EntityMessagerChicken;
+import jones.exosuitmod.entity.AbstractExosuit;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
@@ -41,12 +41,12 @@ public class PacketSendJump implements IMessage
             if (player == null)
                 return null;
             
-            if (!player.isRiding() || !(player.getRidingEntity() instanceof EntityMessagerChicken))
+            if (!player.isRiding() || !(player.getRidingEntity() instanceof AbstractExosuit))
                 return null;
 
-            EntityMessagerChicken messagerChicken = (EntityMessagerChicken) player.getRidingEntity();
+            AbstractExosuit exosuit = (AbstractExosuit) player.getRidingEntity();
 
-            messagerChicken.setJumping(message.setJumping);
+            exosuit.setJumping(message.setJumping);
             
             return null;
         }
