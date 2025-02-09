@@ -30,7 +30,6 @@ public class AbstractExosuit extends EntityCreature
 
     public float jumpPower = 0.0f;
     public boolean isMountJumping = false;
-    public long lastTimeHitCountdown = 0;
 
     public AbstractExosuit(World worldIn) 
     {
@@ -76,9 +75,6 @@ public class AbstractExosuit extends EntityCreature
     public void onLivingUpdate()
     {
         super.onLivingUpdate();
-
-        if(lastTimeHitCountdown > 0)
-            lastTimeHitCountdown -= 1;
 
         if(leftClickCooldown > 0)
             leftClickCooldown--;
@@ -155,7 +151,6 @@ public class AbstractExosuit extends EntityCreature
         super.knockBack(entityIn, strength, xRatio, zRatio);
         if(!this.world.isRemote && this.getControllingPassenger() instanceof EntityPlayerMP)
         {
-            lastTimeHitCountdown = 10;
             ((EntityPlayerMP)this.getControllingPassenger()).connection.sendPacket(new SPacketEntityVelocity(this));
         }
     }
@@ -193,7 +188,6 @@ public class AbstractExosuit extends EntityCreature
                     this.addVelocity(-d0, 0.0D, -d1);
                     if(!this.world.isRemote && this.getControllingPassenger() instanceof EntityPlayerMP)
                     {
-                        lastTimeHitCountdown = 10;
                         ((EntityPlayerMP)this.getControllingPassenger()).connection.sendPacket(new SPacketEntityVelocity(this));
                     }
 
@@ -249,7 +243,7 @@ public class AbstractExosuit extends EntityCreature
                 this.jumpMovementFactor = this.getAIMoveSpeed() * 0.2F;
                 super.travel(strafe, vertical, forward);
             }
-            else if (entitylivingbase instanceof EntityPlayer && lastTimeHitCountdown <= 0)
+            else if (entitylivingbase instanceof EntityPlayer)
             {
                 this.motionX = 0.0D;
                 this.motionY = 0.0D;
