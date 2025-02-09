@@ -18,10 +18,6 @@ import net.minecraft.util.math.MathHelper;
 
 public class EntityMessagerChicken extends AbstractExosuit
 {
-    public float jumpPower = 0.0f;
-    public boolean isMountJumping = false;
-    public long lastTimeHitCountdown = 0;
-
     public float wingRotation;
     public float destPos;
     public float oFlapSpeed;
