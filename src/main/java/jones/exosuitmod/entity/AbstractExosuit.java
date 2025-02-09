@@ -245,10 +245,6 @@ public class AbstractExosuit extends EntityCreature
             }
             else if (entitylivingbase instanceof EntityPlayer)
             {
-                this.motionX = 0.0D;
-                this.motionY = 0.0D;
-                this.motionZ = 0.0D;
-
                 this.prevLimbSwingAmount = this.limbSwingAmount;
                 double d5 = this.posX - this.prevPosX;
                 double d7 = this.posZ - this.prevPosZ;
