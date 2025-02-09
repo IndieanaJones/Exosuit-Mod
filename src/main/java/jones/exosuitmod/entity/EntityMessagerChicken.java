@@ -1,7 +1,6 @@
 package jones.exosuitmod.entity;
 
 import net.minecraft.world.World;
-
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -18,7 +17,7 @@ import net.minecraft.util.math.MathHelper;
 
 public class EntityMessagerChicken extends AbstractExosuit
 {
-    public float wingRotation;
+     public float wingRotation;
     public float destPos;
     public float oFlapSpeed;
     public float oFlap;
@@ -30,15 +29,20 @@ public class EntityMessagerChicken extends AbstractExosuit
         super(worldIn);
         this.setSize(0.4F, 0.7F);
         this.timeUntilNextEgg = this.rand.nextInt(6000) + 6000;
+        this.maxLeftCooldownTime = 40;
+        this.maxRightCooldownTime = 160;
     }
 
     public void onLeftClickPressed(boolean pressed)
     {
         if(this.world.isRemote)
             return;
-        if(!leftClickPressed && pressed)
+        if(!leftClickPressed && pressed && leftClickCooldown <= 0)
         {
             this.playLivingSound();
+
+            leftClickCooldown = this.maxLeftCooldownTime;
+            handleSendingCooldown(this.leftClickCooldown, 0);
         }
         leftClickPressed = pressed;
     }
@@ -47,19 +51,17 @@ public class EntityMessagerChicken extends AbstractExosuit
     {
         if(this.world.isRemote)
             return;
-        if(pressed)
+        if(pressed && rightClickCooldown <= 0)
         {
             this.world.playSound((EntityPlayer)null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_EGG_THROW, SoundCategory.PLAYERS, 0.5F, 0.4F / (this.getRNG().nextFloat() * 0.4F + 0.8F));
             EntityEgg egg = new EntityEgg(this.world, this);
-            egg.shoot(this, this.rotationPitch, this.rotationYaw, 0.2F, 1.5F, 1.0F);
+            egg.shoot(this, this.rotationPitch, this.rotationYaw, 0.0F, 1.5F, 1.0F);
             this.world.spawnEntity(egg);
+
+            rightClickCooldown = this.maxRightCooldownTime;
+            handleSendingCooldown(this.rightClickCooldown, 1);
         }
         rightClickPressed = pressed;
-    }
-
-    public float getEyeHeight()
-    {
-        return this.height - 0.05F;
     }
 
     protected void applyEntityAttributes()
@@ -69,9 +71,16 @@ public class EntityMessagerChicken extends AbstractExosuit
         this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.15D);
     }
 
+    public float getEyeHeight()
+    {
+        return this.height - 0.05F;
+    }
+
     public void onLivingUpdate()
     {
         super.onLivingUpdate();
+
+        livingSoundTime = -1;
 
         this.oFlap = this.wingRotation;
         this.oFlapSpeed = this.destPos;
@@ -103,10 +112,6 @@ public class EntityMessagerChicken extends AbstractExosuit
         {
             this.heal(1.0F);
         }
-    }
-
-    public void fall(float distance, float damageMultiplier)
-    {
     }
 
     protected SoundEvent getAmbientSound()
@@ -145,9 +150,8 @@ public class EntityMessagerChicken extends AbstractExosuit
         compound.setInteger("EggLayTime", this.timeUntilNextEgg);
     }
 
-    public boolean canDespawn()
+    public void fall(float distance, float damageMultiplier)
     {
-        return false;
     }
 
     public void removePassenger(Entity passenger)

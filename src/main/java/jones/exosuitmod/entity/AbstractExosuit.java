@@ -2,6 +2,8 @@ package jones.exosuitmod.entity;
 
 import javax.annotation.Nullable;
 
+import jones.exosuitmod.network.PacketInit;
+import jones.exosuitmod.network.packets.PacketSendExosuitCooldown;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
@@ -9,6 +11,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.MobEffects;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
@@ -19,6 +22,11 @@ public class AbstractExosuit extends EntityCreature
 {
     public boolean leftClickPressed = false;
     public boolean rightClickPressed = false;
+
+    public int leftClickCooldown = 0;
+    public int rightClickCooldown = 0;
+    public int maxLeftCooldownTime = 0;
+    public int maxRightCooldownTime = 0;
 
     public float jumpPower = 0.0f;
     public boolean isMountJumping = false;
@@ -39,17 +47,55 @@ public class AbstractExosuit extends EntityCreature
 
     }
 
+    public void handleSendingCooldown(int cooldown, int cooldownType)
+    {
+        PacketInit.PACKET_HANDLER_INSTANCE.sendToAllTracking(new PacketSendExosuitCooldown(this, cooldown, cooldownType), this);
+    }
+
+    public void readEntityFromNBT(NBTTagCompound compound)
+    {
+        super.readEntityFromNBT(compound);
+
+        if (compound.hasKey("LeftClickCooldown"))
+        {
+            this.leftClickCooldown = compound.getInteger("LeftClickCooldown");
+        }
+        if (compound.hasKey("RightClickCooldown"))
+        {
+            this.rightClickCooldown = compound.getInteger("RightClickCooldown");
+        }
+    }
+
+    public void writeEntityToNBT(NBTTagCompound compound)
+    {
+        super.writeEntityToNBT(compound);
+        compound.setInteger("LeftClickCooldown", this.leftClickCooldown);
+        compound.setInteger("RightClickCooldown", this.leftClickCooldown);
+    }
+
     public void onLivingUpdate()
     {
         super.onLivingUpdate();
 
         if(lastTimeHitCountdown > 0)
             lastTimeHitCountdown -= 1;
+
+        if(leftClickCooldown > 0)
+            leftClickCooldown--;
+        if(rightClickCooldown > 0)
+            rightClickCooldown--;
     }
 
     public boolean canDespawn()
     {
         return false;
+    }
+
+    public void addPassenger(Entity passenger)
+    {
+        super.addPassenger(passenger);
+        handleSendingCooldown(this.leftClickCooldown, 0);
+        handleSendingCooldown(this.rightClickCooldown, 1);
     }
 
     public void updatePassenger(Entity passenger)
@@ -86,6 +132,8 @@ public class AbstractExosuit extends EntityCreature
         if (!this.isBeingRidden() && !this.world.isRemote)
         {
             player.startRiding(this);
+            handleSendingCooldown(this.leftClickCooldown, 0);
+            handleSendingCooldown(this.rightClickCooldown, 1);
             return true;
         }
         return super.processInteract(player, hand);

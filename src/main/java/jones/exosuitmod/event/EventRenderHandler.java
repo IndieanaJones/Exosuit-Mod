@@ -1,5 +1,6 @@
 package jones.exosuitmod.event;
 
+import jones.exosuitmod.client.gui.ExosuitCooldownOverlay;
 import jones.exosuitmod.client.gui.ExosuitHealthbarOverlay;
 import jones.exosuitmod.entity.AbstractExosuit;
 import net.minecraft.client.Minecraft;
@@ -76,11 +77,15 @@ public class EventRenderHandler
 		if(event.getType() == ElementType.HEALTHMOUNT)
 		{
             event.setCanceled(true);
-			ExosuitHealthbarOverlay.INSTANCE.renderHUD(event.getResolution(), player);
 		}
         else if(event.getType() == ElementType.HEALTH)
         {
             event.setCanceled(true);
+        }
+        else if(event.getType() == ElementType.ALL)
+        {
+            ExosuitHealthbarOverlay.INSTANCE.renderHUD(event.getResolution(), player);
+            ExosuitCooldownOverlay.INSTANCE.renderHUD(event.getResolution(), player);
         }
 	}
 
