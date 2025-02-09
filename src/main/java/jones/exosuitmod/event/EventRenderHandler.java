@@ -1,10 +1,12 @@
 package jones.exosuitmod.event;
 
+import jones.exosuitmod.client.ExosuitHealthbarOverlay;
 import jones.exosuitmod.entity.EntityMessagerChicken;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
@@ -62,4 +64,24 @@ public class EventRenderHandler
             return;
         event.setCanceled(true);
     }
+
+    //Render custom exosuit health bar
+    @SideOnly(Side.CLIENT)
+    @SubscribeEvent
+	public static void onRenderHealthBar(RenderGameOverlayEvent.Pre event)
+	{
+        EntityPlayer player = Minecraft.getMinecraft().player;
+        if (!player.isRiding() || !(player.getRidingEntity() instanceof EntityMessagerChicken))
+        return;
+		if(event.getType() == ElementType.HEALTHMOUNT)
+		{
+            event.setCanceled(true);
+			ExosuitHealthbarOverlay.INSTANCE.renderHUD(event.getResolution(), player);
+		}
+        else if(event.getType() == ElementType.HEALTH)
+        {
+            event.setCanceled(true);
+        }
+	}
+
 }
