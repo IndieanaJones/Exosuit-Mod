@@ -30,7 +30,7 @@ public class AbstractExosuit extends EntityCreature
 
     public float jumpPower = 0.0f;
     public boolean isMountJumping = false;
-    public long lastTimeHitCountdown = 0;
+    public int lastTimeHitCountdown = 0;
 
     public AbstractExosuit(World worldIn) 
     {
@@ -132,12 +132,21 @@ public class AbstractExosuit extends EntityCreature
     {
         if (!this.isBeingRidden() && !this.world.isRemote)
         {
+            if(player.isSneaking())
+            {
+                openGUI(player);
+                return true;
+            }
             player.startRiding(this);
             handleSendingCooldown(this.leftClickCooldown, 0);
             handleSendingCooldown(this.rightClickCooldown, 1);
             return true;
         }
         return super.processInteract(player, hand);
+    }
+
+    public void openGUI(EntityPlayer playerEntity)
+    {
     }
 
     public void jump()

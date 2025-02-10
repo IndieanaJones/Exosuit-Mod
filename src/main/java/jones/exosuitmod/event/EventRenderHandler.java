@@ -36,7 +36,7 @@ public class EventRenderHandler
     public static void onEntityRender(RenderLivingEvent.Pre<AbstractExosuit> event)
     {
         EntityLivingBase exosuit = event.getEntity();
-        if(!exosuit.isBeingRidden() || exosuit.getControllingPassenger() != Minecraft.getMinecraft().player)
+        if(!exosuit.isBeingRidden() || exosuit.getControllingPassenger() != Minecraft.getMinecraft().player || !(exosuit instanceof AbstractExosuit))
             return;
         if(Minecraft.getMinecraft().gameSettings.thirdPersonView == 0)
             event.setCanceled(true);
