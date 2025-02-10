@@ -1,4 +1,4 @@
-package jones.exosuitmod.client.gui;
+package jones.exosuitmod.client.gui.basicui;
 
 import jones.exosuitmod.ExosuitMod;
 import jones.exosuitmod.entity.AbstractExosuit;

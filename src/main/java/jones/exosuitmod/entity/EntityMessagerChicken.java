@@ -1,6 +1,8 @@
 package jones.exosuitmod.entity;
 
 import net.minecraft.world.World;
+import jones.exosuitmod.ExosuitMod;
+import jones.exosuitmod.inventory.MessagerChickenInventory;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -8,6 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityEgg;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
@@ -24,6 +27,8 @@ public class EntityMessagerChicken extends AbstractExosuit
     public float wingRotDelta = 1.0F;
     public int timeUntilNextEgg;
 
+    public MessagerChickenInventory inventory;
+
     public EntityMessagerChicken(World worldIn) 
     {
         super(worldIn);
@@ -31,6 +36,7 @@ public class EntityMessagerChicken extends AbstractExosuit
         this.timeUntilNextEgg = this.rand.nextInt(6000) + 6000;
         this.maxLeftCooldownTime = 40;
         this.maxRightCooldownTime = 160;
+        this.inventory = new MessagerChickenInventory();
     }
 
     public void onLeftClickPressed(boolean pressed)
@@ -74,6 +80,11 @@ public class EntityMessagerChicken extends AbstractExosuit
     public float getEyeHeight()
     {
         return this.height - 0.05F;
+    }
+
+    public void openGUI(EntityPlayer playerEntity)
+    {
+        playerEntity.openGui(ExosuitMod.instance, 1, this.world, this.getEntityId(), 0, 0);
     }
 
     public void onLivingUpdate()
@@ -142,12 +153,25 @@ public class EntityMessagerChicken extends AbstractExosuit
         {
             this.timeUntilNextEgg = compound.getInteger("EggLayTime");
         }
+        for(int i = 0; i < this.inventory.getSizeInventory(); i++)
+        {
+            if(!compound.hasKey("InventoryItem" + i))
+                continue;
+            ItemStack itemstack = new ItemStack(compound.getCompoundTag("InventoryItem" + i));
+            this.inventory.setInventorySlotContents(i, itemstack);
+        }
     }
 
     public void writeEntityToNBT(NBTTagCompound compound)
     {
         super.writeEntityToNBT(compound);
         compound.setInteger("EggLayTime", this.timeUntilNextEgg);
+        for(int i = 0; i < this.inventory.getSizeInventory(); i++)
+        {
+            if(this.inventory.getStackInSlot(i).isEmpty())
+                continue;
+            compound.setTag("InventoryItem" + i, this.inventory.getStackInSlot(i).writeToNBT(new NBTTagCompound()));
+        }
     }
 
     public void fall(float distance, float damageMultiplier)

@@ -1,7 +1,7 @@
 package jones.exosuitmod.event;
 
-import jones.exosuitmod.client.gui.ExosuitCooldownOverlay;
-import jones.exosuitmod.client.gui.ExosuitHealthbarOverlay;
+import jones.exosuitmod.client.gui.basicui.ExosuitCooldownOverlay;
+import jones.exosuitmod.client.gui.basicui.ExosuitHealthbarOverlay;
 import jones.exosuitmod.entity.AbstractExosuit;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
