@@ -34,7 +34,7 @@ public class EntityMessagerChicken extends AbstractExosuit
         this.timeUntilNextEgg = this.rand.nextInt(6000) + 6000;
         this.maxLeftCooldownTime = 40;
         this.maxRightCooldownTime = 160;
-        this.inventory = new ExosuitInventory(5);
+        this.inventory = new ExosuitInventory(1);
     }
 
     public void onLeftClickPressed(boolean pressed)

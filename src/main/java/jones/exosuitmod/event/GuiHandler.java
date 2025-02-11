@@ -2,7 +2,6 @@ package jones.exosuitmod.event;
 
 import jones.exosuitmod.client.gui.container.GuiMessagerChickenInventory;
 import jones.exosuitmod.entity.EntityMessagerChicken;
-import jones.exosuitmod.inventory.container.ContainerExosuitInventory;
 import jones.exosuitmod.inventory.container.ContainerMessagerChickenInventory;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;

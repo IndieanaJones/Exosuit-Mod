@@ -9,16 +9,14 @@ import net.minecraft.item.ItemStack;
 
 public class ContainerExosuitInventory extends Container 
 {
-    private final AbstractExosuit exosuit;
+    public final AbstractExosuit exosuit;
+    public int genericSlots = 0;
 
     public ContainerExosuitInventory(EntityPlayer player, AbstractExosuit mob) 
     {
         this.exosuit = mob;
 
-        doCustomItemSlotSetup();
-
-        // Add mob's inventory slots (Example: 5 slots for mob's inventory)
-        for (int i = 1; i < exosuit.inventory.getSizeInventory(); i++) 
+        for (int i = 1; i <genericSlots; i++) 
         {
             this.addSlotToContainer(new Slot(exosuit.inventory, i, 80 + (i * 18), 18));
         }
@@ -39,17 +37,11 @@ public class ContainerExosuitInventory extends Container
         }
     }
 
-    public void doCustomItemSlotSetup()
-    {
-    }
-
-    @Override
     public boolean canInteractWith(EntityPlayer playerIn) 
     {
         return this.exosuit.isEntityAlive() && this.exosuit.getDistance(playerIn) < 8.0F;
     }
 
-    @Override
     public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) 
     {
         ItemStack itemstack = ItemStack.EMPTY;
