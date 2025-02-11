@@ -12,6 +12,8 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.MobEffects;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.IInventoryChangedListener;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.util.DamageSource;
@@ -19,7 +21,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
-public class AbstractExosuit extends EntityCreature 
+public class AbstractExosuit extends EntityCreature implements IInventoryChangedListener
 {
     public boolean leftClickPressed = false;
     public boolean rightClickPressed = false;
@@ -50,9 +52,51 @@ public class AbstractExosuit extends EntityCreature
 
     }
 
-    public void handleSendingCooldown(int cooldown, int cooldownType)
+    public void updateCooldown(String cooldownType, int time, boolean sendUpdate)
     {
-        PacketInit.PACKET_HANDLER_INSTANCE.sendToAllTracking(new PacketSendExosuitCooldown(this, cooldown, cooldownType), this);
+        switch(cooldownType)
+        {
+            case "left":
+            {
+                leftClickCooldown = time;
+                if(sendUpdate)
+                    handleSendingCooldown(leftClickCooldown, 0, false);
+                break;
+            }
+            case "right":
+            {
+                rightClickCooldown = time;
+                if(sendUpdate)
+                    handleSendingCooldown(rightClickCooldown, 1, false);
+                break;
+            }
+        }
+    }
+
+    public void changeMaxCooldownLength(String cooldownType, int time, boolean sendUpdate)
+    {
+        switch(cooldownType)
+        {
+            case "left":
+            {
+                maxLeftCooldownTime = time;
+                if(sendUpdate)
+                    handleSendingCooldown(maxLeftCooldownTime, 0, true);
+                break;
+            }
+            case "right":
+            {
+                maxRightCooldownTime = time;
+                if(sendUpdate)
+                    handleSendingCooldown(maxRightCooldownTime, 1, true);
+                break;
+            }
+        }
+    }
+
+    public void handleSendingCooldown(int cooldown, int cooldownType, boolean isMax)
+    {
+        PacketInit.PACKET_HANDLER_INSTANCE.sendToAllTracking(new PacketSendExosuitCooldown(this, cooldown, cooldownType, isMax), this);
     }
 
     public void readEntityFromNBT(NBTTagCompound compound)
@@ -98,8 +142,12 @@ public class AbstractExosuit extends EntityCreature
     public void addPassenger(Entity passenger)
     {
         super.addPassenger(passenger);
-        handleSendingCooldown(this.leftClickCooldown, 0);
-        handleSendingCooldown(this.rightClickCooldown, 1);
+        this.leftClickCooldown = Math.max(this.leftClickCooldown, 30);
+        this.rightClickCooldown = Math.max(this.rightClickCooldown, 30);
+        handleSendingCooldown(this.leftClickCooldown, 0, false);
+        handleSendingCooldown(this.rightClickCooldown, 1, false);
+        handleSendingCooldown(this.maxLeftCooldownTime, 0, true);
+        handleSendingCooldown(this.maxRightCooldownTime, 1, true);
     }
 
     public void updatePassenger(Entity passenger)
@@ -143,8 +191,6 @@ public class AbstractExosuit extends EntityCreature
                 return true;
             }
             player.startRiding(this);
-            handleSendingCooldown(this.leftClickCooldown, 0);
-            handleSendingCooldown(this.rightClickCooldown, 1);
             return true;
         }
         return super.processInteract(player, hand);
@@ -152,6 +198,16 @@ public class AbstractExosuit extends EntityCreature
 
     public void openGUI(EntityPlayer playerEntity)
     {
+    }
+
+    public void onInventoryChanged(IInventory basicInv) 
+    {
+        this.updateExosuitCapabilities();
+    }
+
+    public void updateExosuitCapabilities()
+    {
+
     }
 
     public void jump()
