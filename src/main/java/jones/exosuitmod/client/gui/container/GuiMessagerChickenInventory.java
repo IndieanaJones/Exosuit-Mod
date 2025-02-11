@@ -1,8 +1,9 @@
 package jones.exosuitmod.client.gui.container;
 
+import jones.exosuitmod.ExosuitMod;
 import jones.exosuitmod.entity.AbstractExosuit;
 import jones.exosuitmod.entity.EntityMessagerChicken;
-import jones.exosuitmod.inventory.ContainerMessagerChickenInventory;
+import jones.exosuitmod.inventory.container.ContainerExosuitInventory;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,22 +15,22 @@ public class GuiMessagerChickenInventory extends GuiContainer
     private AbstractExosuit exosuit;
     private float mousePosX;
     private float mousePosY;
-    private static final ResourceLocation HORSE_GUI_TEXTURES = new ResourceLocation("textures/gui/container/horse.png");
+    private static final ResourceLocation EXOSUIT_INVENTORY_UI = new ResourceLocation(ExosuitMod.MODID + ":textures/client/gui/inventory/exosuit.png");
 
     public GuiMessagerChickenInventory(EntityPlayer player, EntityMessagerChicken mob) 
     {
-        super(new ContainerMessagerChickenInventory(player, mob));
+        super(new ContainerExosuitInventory(player, mob));
         this.name = mob.getName();
         exosuit = mob;
     }
 
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) 
     {
-        mc.getTextureManager().bindTexture(HORSE_GUI_TEXTURES);
-        int lvt_4_1_ = (this.width - this.xSize) / 2;
-        int lvt_5_1_ = (this.height - this.ySize) / 2;
-        this.drawTexturedModalRect(lvt_4_1_, lvt_5_1_, 0, 0, this.xSize, this.ySize);
-        GuiInventory.drawEntityOnScreen(lvt_4_1_ + 51, lvt_5_1_ + 60, 40, (float)(lvt_4_1_ + 51) - this.mousePosX, (float)(lvt_5_1_ + 75 - 50) - this.mousePosY, this.exosuit);
+        mc.getTextureManager().bindTexture(EXOSUIT_INVENTORY_UI);
+        int xPos = (this.width - this.xSize) / 2;
+        int yPos = (this.height - this.ySize) / 2;
+        this.drawTexturedModalRect(xPos, yPos, 0, 0, this.xSize, this.ySize);
+        GuiInventory.drawEntityOnScreen(xPos + 51, yPos + 60, 40, (float)(xPos + 51) - this.mousePosX, (float)(yPos + 25) - this.mousePosY, this.exosuit);
     }
 
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) 

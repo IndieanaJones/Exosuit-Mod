@@ -2,6 +2,7 @@ package jones.exosuitmod.entity;
 
 import javax.annotation.Nullable;
 
+import jones.exosuitmod.inventory.ExosuitInventory;
 import jones.exosuitmod.network.PacketInit;
 import jones.exosuitmod.network.packets.PacketSendExosuitCooldown;
 import net.minecraft.entity.Entity;
@@ -31,6 +32,8 @@ public class AbstractExosuit extends EntityCreature
     public float jumpPower = 0.0f;
     public boolean isMountJumping = false;
     public int lastTimeHitCountdown = 0;
+
+    public ExosuitInventory inventory;
 
     public AbstractExosuit(World worldIn) 
     {
@@ -103,6 +106,8 @@ public class AbstractExosuit extends EntityCreature
     {
         passenger.setPosition(this.posX, this.posY, this.posZ);
         passenger.setSprinting(false);
+        if(passenger instanceof EntityPlayer)
+            ((EntityPlayer)passenger).capabilities.isFlying = false;
     }
 
     public void removePassenger(Entity passenger)

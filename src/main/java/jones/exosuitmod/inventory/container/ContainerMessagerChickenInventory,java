@@ -1,0 +1,9 @@
+package jones.exosuitmod.inventory.container;
+
+public class ContainerMessagerChickenInventory extends ContainerExosuitInventory 
+{
+    public void doCustomItemSlotSetup()
+    {
+        this.addSlotToContainer(new RestrictedExosuitSlot(exosuit.inventory, 0, 80, 18, Items.DIAMOND, 1));
+    }
+}

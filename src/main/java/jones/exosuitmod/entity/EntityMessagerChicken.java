@@ -2,7 +2,7 @@ package jones.exosuitmod.entity;
 
 import net.minecraft.world.World;
 import jones.exosuitmod.ExosuitMod;
-import jones.exosuitmod.inventory.MessagerChickenInventory;
+import jones.exosuitmod.inventory.ExosuitInventory;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -27,8 +27,6 @@ public class EntityMessagerChicken extends AbstractExosuit
     public float wingRotDelta = 1.0F;
     public int timeUntilNextEgg;
 
-    public MessagerChickenInventory inventory;
-
     public EntityMessagerChicken(World worldIn) 
     {
         super(worldIn);
@@ -36,7 +34,7 @@ public class EntityMessagerChicken extends AbstractExosuit
         this.timeUntilNextEgg = this.rand.nextInt(6000) + 6000;
         this.maxLeftCooldownTime = 40;
         this.maxRightCooldownTime = 160;
-        this.inventory = new MessagerChickenInventory();
+        this.inventory = new ExosuitInventory(5);
     }
 
     public void onLeftClickPressed(boolean pressed)

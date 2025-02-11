@@ -1,23 +1,26 @@
-package jones.exosuitmod.inventory;
+package jones.exosuitmod.inventory.container;
 
-import jones.exosuitmod.entity.EntityMessagerChicken;
+import jones.exosuitmod.entity.AbstractExosuit;
+import jones.exosuitmod.inventory.slot.RestrictedExosuitSlot;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class ContainerMessagerChickenInventory extends Container 
+public class ContainerExosuitInventory extends Container 
 {
-    private final EntityMessagerChicken messagerChicken;
+    private final AbstractExosuit exosuit;
 
-    public ContainerMessagerChickenInventory(EntityPlayer player, EntityMessagerChicken mob) 
+    public ContainerExosuitInventory(EntityPlayer player, AbstractExosuit mob) 
     {
-        this.messagerChicken = mob;
+        this.exosuit = mob;
+
+        doCustomItemSlotSetup();
 
         // Add mob's inventory slots (Example: 5 slots for mob's inventory)
-        for (int i = 0; i < messagerChicken.inventory.getSizeInventory(); i++) 
+        for (int i = 1; i < exosuit.inventory.getSizeInventory(); i++) 
         {
-            this.addSlotToContainer(new Slot(messagerChicken.inventory, i, 80 + (i * 18), 18));
+            this.addSlotToContainer(new Slot(exosuit.inventory, i, 80 + (i * 18), 18));
         }
 
         // Add player's inventory slots
@@ -36,10 +39,14 @@ public class ContainerMessagerChickenInventory extends Container
         }
     }
 
+    public void doCustomItemSlotSetup()
+    {
+    }
+
     @Override
     public boolean canInteractWith(EntityPlayer playerIn) 
     {
-        return this.messagerChicken.isEntityAlive() && this.messagerChicken.getDistance(playerIn) < 8.0F;
+        return this.exosuit.isEntityAlive() && this.exosuit.getDistance(playerIn) < 8.0F;
     }
 
     @Override
@@ -53,14 +60,14 @@ public class ContainerMessagerChickenInventory extends Container
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
 
-            if (index < messagerChicken.inventory.getSizeInventory()) 
+            if (index < exosuit.inventory.getSizeInventory()) 
             {
-                if (!this.mergeItemStack(itemstack1, messagerChicken.inventory.getSizeInventory(), this.inventorySlots.size(), true)) 
+                if (!this.mergeItemStack(itemstack1, exosuit.inventory.getSizeInventory(), this.inventorySlots.size(), true)) 
                 {
                     return ItemStack.EMPTY;
                 }
             } 
-            else if (!this.mergeItemStack(itemstack1, 0, messagerChicken.inventory.getSizeInventory(), false)) 
+            else if (!this.mergeItemStack(itemstack1, 0, exosuit.inventory.getSizeInventory(), false)) 
             {
                 return ItemStack.EMPTY;
             }
@@ -75,5 +82,16 @@ public class ContainerMessagerChickenInventory extends Container
             }
         }
         return itemstack;
+    }
+
+    public boolean canMergeSlot(ItemStack stack, Slot slotIn)
+    {
+        if (slotIn instanceof RestrictedExosuitSlot) 
+        {
+            RestrictedExosuitSlot exosuitSlot = (RestrictedExosuitSlot) slotIn;
+            // Check if the item matches the restriction for the slot
+            return exosuitSlot.isItemValid(stack);
+        }
+        return super.canMergeSlot(stack, slotIn);
     }
 }
