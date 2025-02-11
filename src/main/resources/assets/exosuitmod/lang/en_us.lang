@@ -1,8 +1,8 @@
-itemGroup.tabExosuitMod=Exosuits
+itemGroup.tabExosuitMod=Indie's Exosuits
 
 entity.morph_dragon.name=Morph Dragon
 entity.messager_chicken.name=Messager Chicken
 
-key.exosuitmod.category=Exosuit Mod
-key.exosuitleftclick=Exosuit Interact 1
-key.exosuitrightclick=Exosuit Interact 2
+key.exosuitmod.category=Indie's Exosuits
+
+item.exosuit_egg_upgrade_mk1.name=Exosuit Egg Upgrade Mk1
