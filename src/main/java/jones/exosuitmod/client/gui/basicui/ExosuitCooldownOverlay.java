@@ -41,14 +41,14 @@ public class ExosuitCooldownOverlay extends Gui
         drawTexturedModalRect(left_align, resolution.getScaledHeight() - cooldown_height, mount.leftClickCooldown == 0 ? cooldown_bar_length * 2 : 0, 9, cooldown_bar_length, 9);
         if(mount.leftClickCooldown != 0)
         {
-            int fillValue = cooldown_bar_length - Math.round(((float)mount.leftClickCooldown / (float)mount.maxLeftCooldownTime) * cooldown_bar_length);
+            int fillValue = cooldown_bar_length - Math.round(((float)mount.leftClickCooldown / (float)mount.getMaxLeftClickCooldown()) * cooldown_bar_length);
             drawTexturedModalRect(left_align, resolution.getScaledHeight() - cooldown_height, cooldown_bar_length, 9, fillValue, 9);
         }
 
         drawTexturedModalRect(right_align, resolution.getScaledHeight() - cooldown_height + 9, mount.rightClickCooldown == 0 ? cooldown_bar_length * 3 : cooldown_bar_length, 18, -cooldown_bar_length, -9);
         if(mount.rightClickCooldown != 0)
         {
-            int fillValue = cooldown_bar_length - Math.round(((float)mount.rightClickCooldown / (float)mount.maxRightCooldownTime) * cooldown_bar_length);
+            int fillValue = cooldown_bar_length - Math.round(((float)mount.rightClickCooldown / (float)mount.getMaxRightClickCooldown()) * cooldown_bar_length);
             drawTexturedModalRect(right_align, resolution.getScaledHeight() - cooldown_height + 9, cooldown_bar_length * 2, 18, -fillValue, -9);
         }
 

@@ -12,16 +12,14 @@ public class PacketSendExosuitCooldown implements IMessage
     public int entityID;
     public int cooldownTime;
     public int cooldownType;
-    public boolean isMax;
     
     public PacketSendExosuitCooldown() {}
     
-    public PacketSendExosuitCooldown(AbstractExosuit exosuit, int cooldown, int type, boolean max) 
+    public PacketSendExosuitCooldown(AbstractExosuit exosuit, int cooldown, int type) 
     {
         this.entityID = exosuit.getEntityId();
         this.cooldownTime = cooldown;
         this.cooldownType = type;
-        this.isMax = max;
     }
     
     public void fromBytes(final ByteBuf buf) 
@@ -29,7 +27,6 @@ public class PacketSendExosuitCooldown implements IMessage
         this.entityID = buf.readInt();
         this.cooldownTime = buf.readInt();
         this.cooldownType = buf.readInt();
-        this.isMax = buf.readBoolean();
     }
     
     public void toBytes(final ByteBuf buf) 
@@ -37,7 +34,6 @@ public class PacketSendExosuitCooldown implements IMessage
         buf.writeInt(this.entityID);
         buf.writeInt(this.cooldownTime);
         buf.writeInt(this.cooldownType);
-        buf.writeBoolean(this.isMax);
     }
     
     public static class SendExosuitCooldownHandler implements IMessageHandler<PacketSendExosuitCooldown, IMessage>
@@ -52,26 +48,17 @@ public class PacketSendExosuitCooldown implements IMessage
             {
                 case 0:
                 {
-                    if(message.isMax)
-                        exosuit.maxLeftCooldownTime = message.cooldownTime;
-                    else
-                        exosuit.leftClickCooldown = message.cooldownTime;
+                    exosuit.leftClickCooldown = message.cooldownTime;
                     break;
                 }
                 case 1:
                 {
-                    if(message.isMax)
-                        exosuit.maxRightCooldownTime = message.cooldownTime;
-                    else
-                        exosuit.rightClickCooldown = message.cooldownTime;
+                    exosuit.rightClickCooldown = message.cooldownTime;
                     break;
                 }
                 default:
                 {
-                    if(message.isMax)
-                        exosuit.maxLeftCooldownTime = message.cooldownTime;
-                    else
-                        exosuit.leftClickCooldown = message.cooldownTime;
+                    exosuit.leftClickCooldown = message.cooldownTime;
                     break;
                 }
             }

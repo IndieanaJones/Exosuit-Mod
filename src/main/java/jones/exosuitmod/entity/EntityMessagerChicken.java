@@ -28,15 +28,23 @@ public class EntityMessagerChicken extends AbstractExosuit
     public float wingRotDelta = 1.0F;
 
     public int eggUpgradeStatus = 0;
+    public int doubleJumpUpgradeStatus = 0;
 
     public EntityMessagerChicken(World worldIn) 
     {
         super(worldIn);
         this.setSize(0.4F, 0.7F);
-        this.maxLeftCooldownTime = 40;
-        this.maxRightCooldownTime = 800;
-        this.inventory = new ExosuitInventory(1);
+        this.setMaxLeftClickCooldown(40);
+        this.setMaxRightClickCooldown(800);
+        this.inventory = new ExosuitInventory(2);
         this.inventory.addInventoryChangeListener(this);
+    }
+
+    public void entityInit()
+    {
+        super.entityInit();
+        this.setMaxLeftClickCooldown(40);
+        this.setMaxRightClickCooldown(800); 
     }
 
     public void onLeftClickPressed(boolean pressed)
@@ -47,7 +55,7 @@ public class EntityMessagerChicken extends AbstractExosuit
         {
             this.playLivingSound();
 
-            this.updateCooldown("left", this.maxLeftCooldownTime, true);
+            this.updateCooldown("left", this.getMaxLeftClickCooldown(), true);
         }
         leftClickPressed = pressed;
     }
@@ -65,7 +73,7 @@ public class EntityMessagerChicken extends AbstractExosuit
                     this.playSound(SoundEvents.ENTITY_CHICKEN_EGG, 1.0F, (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1.0F);
                     this.dropItem(Items.EGG, 1);
 
-                    updateCooldown("right", this.maxRightCooldownTime, true);
+                    updateCooldown("right", this.getMaxRightClickCooldown(), true);
                     break;
                 }
                 case 1:
@@ -75,7 +83,7 @@ public class EntityMessagerChicken extends AbstractExosuit
                     egg.shoot(this, this.rotationPitch, this.rotationYaw, 0.0F, 1.5F, 1.0F);
                     this.world.spawnEntity(egg);
         
-                    updateCooldown("right", this.maxRightCooldownTime, true);
+                    updateCooldown("right", this.getMaxRightClickCooldown(), true);
                     break;
                 }
                 case 2:
@@ -85,7 +93,7 @@ public class EntityMessagerChicken extends AbstractExosuit
                     egg.shoot(this, this.rotationPitch, this.rotationYaw, 0.0F, 1.5F, 1.0F);
                     this.world.spawnEntity(egg);
         
-                    updateCooldown("right", this.maxRightCooldownTime, true);
+                    updateCooldown("right", this.getMaxRightClickCooldown(), true);
                     break;
                 }
             }
@@ -113,20 +121,35 @@ public class EntityMessagerChicken extends AbstractExosuit
     public void updateExosuitCapabilities()
     {
         ItemStack eggUpgradeSlot = inventory.getStackInSlot(0);
+        ItemStack doubleJumpUpgradeSlot = inventory.getStackInSlot(1);
+
+        //Egg ability
         if(eggUpgradeSlot.getItem() == Items.AIR)
         {
             eggUpgradeStatus = 0;
-            this.changeMaxCooldownLength("right", 800, true);
+            this.setMaxRightClickCooldown(800);
         }
         else if(eggUpgradeSlot.getItem() == ItemInit.EXOSUIT_EGG_UPGRADE_MK1)
         {
             eggUpgradeStatus = 1;
-            this.changeMaxCooldownLength("right", 160, true);
+            this.setMaxRightClickCooldown(160);
         }
         else if(eggUpgradeSlot.getItem() == ItemInit.EXOSUIT_EGG_UPGRADE_MK2)
         {
             eggUpgradeStatus = 2;
-            this.changeMaxCooldownLength("right", 160, true);
+            this.setMaxRightClickCooldown(160);
+        }
+
+        //Double jump
+        if(doubleJumpUpgradeSlot.getItem() == Items.AIR)
+        {
+            doubleJumpUpgradeStatus = 0;
+            this.setMaxMidairJumps(0);
+        }
+        else if(doubleJumpUpgradeSlot.getItem() == ItemInit.EXOSUIT_CHICKEN_DOUBLE_JUMP_MK1)
+        {
+            doubleJumpUpgradeStatus = 1;
+            this.setMaxMidairJumps(1);
         }
     }
 

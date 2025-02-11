@@ -15,6 +15,9 @@ import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.IInventoryChangedListener;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
@@ -28,8 +31,11 @@ public class AbstractExosuit extends EntityCreature implements IInventoryChanged
 
     public int leftClickCooldown = 0;
     public int rightClickCooldown = 0;
-    public int maxLeftCooldownTime = 0;
-    public int maxRightCooldownTime = 0;
+    private static final DataParameter<Integer> MAX_LEFT_CLICK_COOLDOWN = EntityDataManager.<Integer>createKey(AbstractExosuit.class, DataSerializers.VARINT);
+    private static final DataParameter<Integer> MAX_RIGHT_CLICK_COOLDOWN = EntityDataManager.<Integer>createKey(AbstractExosuit.class, DataSerializers.VARINT);
+
+    private static final DataParameter<Integer> MAX_MIDAIR_JUMPS = EntityDataManager.<Integer>createKey(AbstractExosuit.class, DataSerializers.VARINT);
+    public float currentMidairJumps = 0;
 
     public float jumpPower = 0.0f;
     public boolean isMountJumping = false;
@@ -40,6 +46,15 @@ public class AbstractExosuit extends EntityCreature implements IInventoryChanged
     public AbstractExosuit(World worldIn) 
     {
         super(worldIn);
+    }
+
+    @Override
+    protected void entityInit()
+    {
+        super.entityInit();
+        this.getDataManager().register(MAX_MIDAIR_JUMPS, 0);
+        this.getDataManager().register(MAX_LEFT_CLICK_COOLDOWN, 0);
+        this.getDataManager().register(MAX_RIGHT_CLICK_COOLDOWN, 0);
     }
 
     public void onLeftClickPressed(boolean pressed)
@@ -60,43 +75,52 @@ public class AbstractExosuit extends EntityCreature implements IInventoryChanged
             {
                 leftClickCooldown = time;
                 if(sendUpdate)
-                    handleSendingCooldown(leftClickCooldown, 0, false);
+                    handleSendingCooldown(leftClickCooldown, 0);
                 break;
             }
             case "right":
             {
                 rightClickCooldown = time;
                 if(sendUpdate)
-                    handleSendingCooldown(rightClickCooldown, 1, false);
+                    handleSendingCooldown(rightClickCooldown, 1);
                 break;
             }
         }
     }
 
-    public void changeMaxCooldownLength(String cooldownType, int time, boolean sendUpdate)
+    public void handleSendingCooldown(int cooldown, int cooldownType)
     {
-        switch(cooldownType)
-        {
-            case "left":
-            {
-                maxLeftCooldownTime = time;
-                if(sendUpdate)
-                    handleSendingCooldown(maxLeftCooldownTime, 0, true);
-                break;
-            }
-            case "right":
-            {
-                maxRightCooldownTime = time;
-                if(sendUpdate)
-                    handleSendingCooldown(maxRightCooldownTime, 1, true);
-                break;
-            }
-        }
+        PacketInit.PACKET_HANDLER_INSTANCE.sendToAllTracking(new PacketSendExosuitCooldown(this, cooldown, cooldownType), this);
     }
 
-    public void handleSendingCooldown(int cooldown, int cooldownType, boolean isMax)
+    public void setMaxLeftClickCooldown(int value) 
     {
-        PacketInit.PACKET_HANDLER_INSTANCE.sendToAllTracking(new PacketSendExosuitCooldown(this, cooldown, cooldownType, isMax), this);
+        this.getDataManager().set(MAX_LEFT_CLICK_COOLDOWN, value);
+    }
+    
+    public int getMaxLeftClickCooldown() 
+    {
+        return this.getDataManager().get(MAX_LEFT_CLICK_COOLDOWN);
+    }
+
+    public void setMaxRightClickCooldown(int value) 
+    {
+        this.getDataManager().set(MAX_RIGHT_CLICK_COOLDOWN, value);
+    }
+    
+    public int getMaxRightClickCooldown() 
+    {
+        return this.getDataManager().get(MAX_RIGHT_CLICK_COOLDOWN);
+    }
+
+    public void setMaxMidairJumps(int value) 
+    {
+        this.getDataManager().set(MAX_MIDAIR_JUMPS, value);
+    }
+    
+    public int getMaxMidairJumps() 
+    {
+        return this.getDataManager().get(MAX_MIDAIR_JUMPS);
     }
 
     public void readEntityFromNBT(NBTTagCompound compound)
@@ -142,12 +166,8 @@ public class AbstractExosuit extends EntityCreature implements IInventoryChanged
     public void addPassenger(Entity passenger)
     {
         super.addPassenger(passenger);
-        this.leftClickCooldown = Math.max(this.leftClickCooldown, 30);
-        this.rightClickCooldown = Math.max(this.rightClickCooldown, 30);
-        handleSendingCooldown(this.leftClickCooldown, 0, false);
-        handleSendingCooldown(this.rightClickCooldown, 1, false);
-        handleSendingCooldown(this.maxLeftCooldownTime, 0, true);
-        handleSendingCooldown(this.maxRightCooldownTime, 1, true);
+        this.updateCooldown("left", Math.max(30, this.leftClickCooldown), true);
+        this.updateCooldown("right", Math.max(30, rightClickCooldown), true);
     }
 
     public void updatePassenger(Entity passenger)
@@ -313,6 +333,29 @@ public class AbstractExosuit extends EntityCreature implements IInventoryChanged
 
                 this.jumpPower = 0.0F;
             }
+            else if(this.jumpPower > 0.0F && this.currentMidairJumps > 0 && this.motionY < 0)
+            {
+                currentMidairJumps--;
+                this.motionY = (double)this.jumpPower;
+
+                if (this.isPotionActive(MobEffects.JUMP_BOOST))
+                {
+                    this.motionY = this.motionY * (1.5f + (this.getActivePotionEffect(MobEffects.JUMP_BOOST).getAmplifier() * 0.5F));
+                }
+
+                this.isMountJumping = true;
+                this.isAirBorne = true;
+
+                if (forward > 0.0F)
+                {
+                    float f = MathHelper.sin(this.rotationYaw * 0.017453292F);
+                    float f1 = MathHelper.cos(this.rotationYaw * 0.017453292F);
+                    this.motionX += (double)(-0.4F * f * this.jumpPower);
+                    this.motionZ += (double)(0.4F * f1 * this.jumpPower);
+                }
+
+                this.jumpPower = 0.0F;
+            }
 
             if (this.canPassengerSteer())
             {
@@ -344,6 +387,7 @@ public class AbstractExosuit extends EntityCreature implements IInventoryChanged
             if (this.onGround)
             {
                 this.jumpPower = 0.0F;
+                this.currentMidairJumps = this.getMaxMidairJumps();
                 this.isMountJumping = false;
             }
         }

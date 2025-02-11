@@ -5,5 +5,7 @@ entity.messager_chicken.name=Messager Chicken
 
 key.exosuitmod.category=Indie's Exosuits
 
-item.exosuit_egg_upgrade_mk1.name=Exosuit Egg Upgrade Mk1
-item.exosuit_egg_upgrade_mk2.name=Exosuit Egg Upgrade Mk2
+item.exosuit_egg_upgrade_mk1.name=Messager Chicken Upgrade: Egg Thrower Mk1
+item.exosuit_egg_upgrade_mk2.name=Messager Chicken Upgrade: Egg Thrower Mk2
+item.exosuit_chicken_double_jump_mk1.name=Messager Chicken Upgrade: Double Jump Mk1
+item.exosuit_explosive_egg.name=Exosuit Explosive Egg

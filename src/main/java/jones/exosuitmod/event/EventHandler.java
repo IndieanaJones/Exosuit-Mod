@@ -34,6 +34,8 @@ public class EventHandler
         boolean isJumping = event.getMovementInput().jump;
         AbstractExosuit exosuit = (AbstractExosuit) player.getRidingEntity();
         exosuit.setJumping(isJumping);
+        if(isJumping && exosuit.motionY < 0 && !exosuit.onGround && exosuit.currentMidairJumps > 0)
+            exosuit.jump();
     }
 
     public static boolean leftClickPressed = false;
