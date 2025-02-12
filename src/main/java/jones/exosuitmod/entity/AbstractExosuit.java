@@ -21,8 +21,11 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class AbstractExosuit extends EntityCreature implements IInventoryChangedListener
 {
@@ -402,5 +405,31 @@ public class AbstractExosuit extends EntityCreature implements IInventoryChanged
             this.jumpMovementFactor = 0.02F;
             super.travel(strafe, vertical, forward);
         }
+    }
+
+    public int getTextureLength()
+    {
+        return 0;
+    }
+
+    public int getTextureHeight()
+    {
+        return 0;
+    }
+
+    public String getExosuitIdentifier()
+    {
+        return "test";
+    }
+
+    public int getTotalTextureLayers()
+    {
+        return 1;
+    }
+    
+    @SideOnly(Side.CLIENT)
+    public ResourceLocation getTextureResource(int id)
+    {
+        return null;
     }
 } 

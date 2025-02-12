@@ -40,6 +40,7 @@ public class EventHandler
 
     public static boolean leftClickPressed = false;
     public static boolean rightClickPressed = false;
+    @SideOnly(Side.CLIENT)
     @SubscribeEvent(priority = EventPriority.NORMAL)
     public static void onInputEvent(InputEvent event)
     {

@@ -9,11 +9,9 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-@Mod.EventBusSubscriber
 public class ExosuitCooldownOverlay extends Gui
 {
     private static final ResourceLocation EXOSUITUI = new ResourceLocation(ExosuitMod.MODID + ":textures/client/gui/exosuitui.png");

@@ -1,7 +1,10 @@
 package jones.exosuitmod.entity;
 
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import jones.exosuitmod.ExosuitMod;
+import jones.exosuitmod.entity.render.AdvancedEntityTextureHandler;
 import jones.exosuitmod.inventory.ExosuitInventory;
 import jones.exosuitmod.item.ItemInit;
 import jones.exosuitmod.network.PacketInit;
@@ -15,7 +18,11 @@ import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
@@ -29,8 +36,10 @@ public class EntityMessagerChicken extends AbstractExosuit
     public float oFlap;
     public float wingRotDelta = 1.0F;
 
-    public int eggUpgradeStatus = 0;
-    public int featherUpgradeStatus = 0;
+    private int oldEggUpgradeStatus = 0;
+    private static final DataParameter<Integer> EGG_UPGRADE_STATUS = EntityDataManager.<Integer>createKey(EntityMessagerChicken.class, DataSerializers.VARINT);
+    private int oldFeatherUpgradeStatus = 0;
+    private static final DataParameter<Integer> FEATHER_UPGRADE_STATUS = EntityDataManager.<Integer>createKey(EntityMessagerChicken.class, DataSerializers.VARINT);
 
     public EntityMessagerChicken(World worldIn) 
     {
@@ -47,6 +56,8 @@ public class EntityMessagerChicken extends AbstractExosuit
         super.entityInit();
         this.setMaxLeftClickCooldown(40);
         this.setMaxRightClickCooldown(800); 
+        this.getDataManager().register(EGG_UPGRADE_STATUS, 0);
+        this.getDataManager().register(FEATHER_UPGRADE_STATUS, 0);
     }
 
     public void onLeftClickPressed(boolean pressed)
@@ -68,7 +79,7 @@ public class EntityMessagerChicken extends AbstractExosuit
             return;
         if(pressed && rightClickCooldown <= 0)
         {
-            switch(eggUpgradeStatus)
+            switch(this.getEggUpgradeStatus())
             {
                 case 0:
                 {
@@ -128,36 +139,36 @@ public class EntityMessagerChicken extends AbstractExosuit
         //Egg ability
         if(eggUpgradeSlot.getItem() == Items.AIR)
         {
-            eggUpgradeStatus = 0;
+            this.setEggUpgradeStatus(0);
             this.setMaxRightClickCooldown(800);
         }
         else if(eggUpgradeSlot.getItem() == ItemInit.EXOSUIT_EGG_UPGRADE_MK1)
         {
-            eggUpgradeStatus = 1;
+            this.setEggUpgradeStatus(1);
             this.setMaxRightClickCooldown(160);
         }
         else if(eggUpgradeSlot.getItem() == ItemInit.EXOSUIT_EGG_UPGRADE_MK2)
         {
-            eggUpgradeStatus = 2;
+            this.setEggUpgradeStatus(2);
             this.setMaxRightClickCooldown(160);
         }
 
         //Double jump
         if(featherUpgradeSlot.getItem() == Items.AIR)
         {
-            featherUpgradeStatus = 0;
+            this.setFeatherUpgradeStatus(0);
             this.setMaxMidairJumps(0);
             this.getEntityAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(0D);
         }
         else if(featherUpgradeSlot.getItem() == ItemInit.EXOSUIT_CHICKEN_DOUBLE_JUMP_MK1)
         {
-            featherUpgradeStatus = 1;
+            this.setFeatherUpgradeStatus(1);
             this.setMaxMidairJumps(1);
             this.getEntityAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(0D);
         }
         else if(featherUpgradeSlot.getItem() == ItemInit.EXOSUIT_CHICKEN_ARMOR_MK1)
         {
-            featherUpgradeStatus = 2;
+            this.setFeatherUpgradeStatus(2);
             this.setMaxMidairJumps(0);
             this.getEntityAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(10D);
         }
@@ -197,6 +208,13 @@ public class EntityMessagerChicken extends AbstractExosuit
         {
             this.heal(1.0F);
         }
+
+        if(this.world.isRemote && (this.oldEggUpgradeStatus != this.getEggUpgradeStatus() || this.oldFeatherUpgradeStatus != this.getFeatherUpgradeStatus()))
+        {
+            oldEggUpgradeStatus = this.getEggUpgradeStatus();
+            oldFeatherUpgradeStatus = this.getFeatherUpgradeStatus();
+            AdvancedEntityTextureHandler.INSTANCE.updateExosuitTexture(this);
+        }
     }
 
     protected SoundEvent getAmbientSound()
@@ -217,6 +235,26 @@ public class EntityMessagerChicken extends AbstractExosuit
     protected void playStepSound(BlockPos pos, Block blockIn)
     {
         this.playSound(SoundEvents.ENTITY_CHICKEN_STEP, 0.15F, 1.0F);
+    }
+
+    public void setEggUpgradeStatus(int value) 
+    {
+        this.getDataManager().set(EGG_UPGRADE_STATUS, value);
+    }
+    
+    public int getEggUpgradeStatus() 
+    {
+        return this.getDataManager().get(EGG_UPGRADE_STATUS);
+    }
+
+    public void setFeatherUpgradeStatus(int value) 
+    {
+        this.getDataManager().set(FEATHER_UPGRADE_STATUS, value);
+    }
+    
+    public int getFeatherUpgradeStatus() 
+    {
+        return this.getDataManager().get(FEATHER_UPGRADE_STATUS);
     }
 
     public void readEntityFromNBT(NBTTagCompound compound)
@@ -252,5 +290,57 @@ public class EntityMessagerChicken extends AbstractExosuit
     {
         super.removePassenger(passenger);
         passenger.attackEntityFrom(DamageSource.FALL, 5);
+    }
+
+    public int getTextureLength()
+    {
+        return 64;
+    }
+
+    public int getTextureHeight()
+    {
+        return 32;
+    }
+
+    public String getExosuitIdentifier()
+    {
+        return "messager_chicken";
+    }
+
+    public int getTotalTextureLayers()
+    {
+        return 2;
+    }
+    
+    @SideOnly(Side.CLIENT)
+    public ResourceLocation getTextureResource(int id)
+    {
+        switch(id)
+        {
+            case 0:
+            {
+                return new ResourceLocation(ExosuitMod.MODID + ":textures/entity/messager_chicken/messager_chicken.png");
+            }
+            case 1:
+            {
+                switch(this.getFeatherUpgradeStatus())
+                {
+                    case 1:
+                    {
+                        return new ResourceLocation(ExosuitMod.MODID + ":textures/entity/messager_chicken/messager_chicken_jump_1.png");
+                    }
+                    case 2:
+                    {
+                        return new ResourceLocation(ExosuitMod.MODID + ":textures/entity/messager_chicken/messager_chicken_armor_1.png");
+                    }
+                    default:
+                    {
+                        return new ResourceLocation(ExosuitMod.MODID + ":textures/entity/messager_chicken/messager_chicken_blank.png");
+                    }
+                }
+            }
+        }
+
+        return null;
     }
 }

@@ -4,11 +4,13 @@ import jones.exosuitmod.client.gui.basicui.ExosuitArmorOverlay;
 import jones.exosuitmod.client.gui.basicui.ExosuitCooldownOverlay;
 import jones.exosuitmod.client.gui.basicui.ExosuitHealthbarOverlay;
 import jones.exosuitmod.entity.AbstractExosuit;
+import jones.exosuitmod.entity.render.AdvancedEntityTextureHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
@@ -90,5 +92,13 @@ public class EventRenderHandler
             ExosuitArmorOverlay.INSTANCE.renderHUD(event.getResolution(), player);
         }
 	}
+
+    //Clear the custom skin cache when we leave a world
+    @SideOnly(Side.CLIENT)
+    @SubscribeEvent
+    public static void onWorldUnload(WorldEvent.Unload event)
+    {
+        AdvancedEntityTextureHandler.INSTANCE.close();
+    }
 
 }
