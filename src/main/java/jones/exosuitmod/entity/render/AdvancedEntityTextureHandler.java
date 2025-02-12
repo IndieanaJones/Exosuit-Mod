@@ -74,7 +74,8 @@ public class AdvancedEntityTextureHandler implements AutoCloseable
                 for (int i = 1; i < this.entity.getTotalTextureLayers(); i++)
                 {
                     BufferedImage layer = loadTextureFile(i);
-                    output = this.combineImages(output, layer);
+                    if(layer != null)
+                        output = this.combineImages(output, layer);
                 }
             }
             this.entityTexture = new DynamicTexture(output);
@@ -94,6 +95,8 @@ public class AdvancedEntityTextureHandler implements AutoCloseable
 		 	BufferedImage img = new BufferedImage(entity.getTextureLength(), entity.getTextureHeight(), BufferedImage.TYPE_INT_ARGB);
 
             ResourceLocation filelocation = entity.getTextureResource(id);
+            if(filelocation == null)
+                return null;
             InputStream inputstream = null;
             try 
             {

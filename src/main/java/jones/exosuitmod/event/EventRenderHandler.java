@@ -100,5 +100,4 @@ public class EventRenderHandler
     {
         AdvancedEntityTextureHandler.INSTANCE.close();
     }
-
 }

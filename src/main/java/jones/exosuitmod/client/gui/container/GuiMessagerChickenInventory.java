@@ -37,6 +37,8 @@ public class GuiMessagerChickenInventory extends GuiContainer
         this.drawTexturedModalRect(xPos + 79, yPos + 17, 0, 220, 18, 18);
         //Double jump upgrade slot
         this.drawTexturedModalRect(xPos + 97, yPos + 17, 18, 220, 18, 18);
+        //Speed upgrade slot
+        this.drawTexturedModalRect(xPos + 115, yPos + 17, 36, 220, 18, 18);
         GuiInventory.drawEntityOnScreen(xPos + 51, yPos + 60, 40, (float)(xPos + 51) - this.mousePosX, (float)(yPos + 25) - this.mousePosY, this.exosuit);
     }
 

@@ -27,8 +27,8 @@ public class EntityInit
 	@SubscribeEvent
     public static void registerEntities(final RegistryEvent.Register<EntityEntry> event) 
     {
-        registerEntity("morph_dragon", (Class<? extends Entity>)EntityMorphDragon.class, 847, 100, 1, false, 5582119, 13079892);
-        registerEntity("messager_chicken", (Class<? extends Entity>)EntityMessagerChicken.class, 848, 100, 1, false, 5582119, 13079892);
+        registerEntity("morph_dragon", (Class<? extends Entity>)EntityMorphDragon.class, 847, 128, 1, false, 5582119, 13079892);
+        registerEntity("messager_chicken", (Class<? extends Entity>)EntityMessagerChicken.class, 848, 128, 1, false, 5582119, 13079892);
         registerEntity("exosuit_explosive_egg", (Class<? extends Entity>)EntityExosuitExplosiveEgg.class, 849, 128, 10, true);
     }
     

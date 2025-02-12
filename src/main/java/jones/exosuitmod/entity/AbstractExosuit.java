@@ -2,6 +2,7 @@ package jones.exosuitmod.entity;
 
 import javax.annotation.Nullable;
 
+import jones.exosuitmod.entity.render.AdvancedEntityTextureHandler;
 import jones.exosuitmod.inventory.ExosuitInventory;
 import jones.exosuitmod.network.PacketInit;
 import jones.exosuitmod.network.packets.PacketSendExosuitCooldown;
@@ -29,6 +30,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class AbstractExosuit extends EntityCreature implements IInventoryChangedListener
 {
+    private int ticksUntilTextureRefresh = 20;
+
     public boolean leftClickPressed = false;
     public boolean rightClickPressed = false;
 
@@ -51,13 +54,12 @@ public class AbstractExosuit extends EntityCreature implements IInventoryChanged
         super(worldIn);
     }
 
-    @Override
     protected void entityInit()
     {
         super.entityInit();
-        this.getDataManager().register(MAX_MIDAIR_JUMPS, 0);
-        this.getDataManager().register(MAX_LEFT_CLICK_COOLDOWN, 0);
-        this.getDataManager().register(MAX_RIGHT_CLICK_COOLDOWN, 0);
+        this.dataManager.register(MAX_LEFT_CLICK_COOLDOWN, Integer.valueOf(0));
+        this.dataManager.register(MAX_RIGHT_CLICK_COOLDOWN, Integer.valueOf(0));
+        this.dataManager.register(MAX_MIDAIR_JUMPS, Integer.valueOf(0));
     }
 
     public void onLeftClickPressed(boolean pressed)
@@ -98,32 +100,32 @@ public class AbstractExosuit extends EntityCreature implements IInventoryChanged
 
     public void setMaxLeftClickCooldown(int value) 
     {
-        this.getDataManager().set(MAX_LEFT_CLICK_COOLDOWN, value);
+        this.dataManager.set(MAX_LEFT_CLICK_COOLDOWN, Integer.valueOf(value));
     }
     
     public int getMaxLeftClickCooldown() 
     {
-        return this.getDataManager().get(MAX_LEFT_CLICK_COOLDOWN);
+        return this.dataManager.get(MAX_LEFT_CLICK_COOLDOWN).intValue();
     }
 
     public void setMaxRightClickCooldown(int value) 
     {
-        this.getDataManager().set(MAX_RIGHT_CLICK_COOLDOWN, value);
+        this.dataManager.set(MAX_RIGHT_CLICK_COOLDOWN, Integer.valueOf(value));
     }
     
     public int getMaxRightClickCooldown() 
     {
-        return this.getDataManager().get(MAX_RIGHT_CLICK_COOLDOWN);
+        return this.dataManager.get(MAX_RIGHT_CLICK_COOLDOWN).intValue();
     }
 
     public void setMaxMidairJumps(int value) 
     {
-        this.getDataManager().set(MAX_MIDAIR_JUMPS, value);
+        this.dataManager.set(MAX_MIDAIR_JUMPS, Integer.valueOf(value));
     }
     
     public int getMaxMidairJumps() 
     {
-        return this.getDataManager().get(MAX_MIDAIR_JUMPS);
+        return this.dataManager.get(MAX_MIDAIR_JUMPS).intValue();
     }
 
     public void readEntityFromNBT(NBTTagCompound compound)
@@ -144,7 +146,7 @@ public class AbstractExosuit extends EntityCreature implements IInventoryChanged
     {
         super.writeEntityToNBT(compound);
         compound.setInteger("LeftClickCooldown", this.leftClickCooldown);
-        compound.setInteger("RightClickCooldown", this.leftClickCooldown);
+        compound.setInteger("RightClickCooldown", this.rightClickCooldown);
     }
 
     public void onLivingUpdate()
@@ -159,6 +161,16 @@ public class AbstractExosuit extends EntityCreature implements IInventoryChanged
             leftClickCooldown--;
         if(rightClickCooldown > 0)
             rightClickCooldown--;
+
+        if(this.world.isRemote)
+        {
+            this.ticksUntilTextureRefresh--;
+            if(this.ticksUntilTextureRefresh <= 0)
+            {
+                AdvancedEntityTextureHandler.INSTANCE.updateExosuitTexture(this);
+                this.ticksUntilTextureRefresh = 10 + this.rand.nextInt(30);
+            }
+        }
     }
 
     public boolean canDespawn()
