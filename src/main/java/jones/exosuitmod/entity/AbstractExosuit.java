@@ -12,6 +12,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.IInventoryChangedListener;
@@ -39,8 +40,8 @@ public class AbstractExosuit extends EntityCreature implements IInventoryChanged
     public int rightClickCooldown = 0;
     private static final DataParameter<Integer> MAX_LEFT_CLICK_COOLDOWN = EntityDataManager.<Integer>createKey(AbstractExosuit.class, DataSerializers.VARINT);
     private static final DataParameter<Integer> MAX_RIGHT_CLICK_COOLDOWN = EntityDataManager.<Integer>createKey(AbstractExosuit.class, DataSerializers.VARINT);
-
     private static final DataParameter<Integer> MAX_MIDAIR_JUMPS = EntityDataManager.<Integer>createKey(AbstractExosuit.class, DataSerializers.VARINT);
+    
     public float currentMidairJumps = 0;
 
     public float jumpPower = 0.0f;
@@ -218,14 +219,15 @@ public class AbstractExosuit extends EntityCreature implements IInventoryChanged
 
     public boolean processInteract(EntityPlayer player, EnumHand hand)
     {
-        if (!this.isBeingRidden() && !this.world.isRemote)
+        if (!this.isBeingRidden() && player.getHeldItem(EnumHand.MAIN_HAND).getItem() == Items.AIR)
         {
             if(player.isSneaking())
             {
                 openGUI(player);
                 return true;
             }
-            player.startRiding(this);
+            if(!this.world.isRemote)
+                player.startRiding(this);
             return true;
         }
         return super.processInteract(player, hand);

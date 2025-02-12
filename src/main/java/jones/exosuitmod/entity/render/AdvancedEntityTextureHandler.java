@@ -23,7 +23,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class AdvancedEntityTextureHandler implements AutoCloseable
 {
     public static AdvancedEntityTextureHandler INSTANCE = new AdvancedEntityTextureHandler();
-    private final Map<String, AdvancedEntityTextureHandler.Instance> loadedEntities = Maps.newHashMap();
+    private final Map<Integer, AdvancedEntityTextureHandler.Instance> loadedEntities = Maps.newHashMap();
 
     public ResourceLocation getTextureLocation(AbstractExosuit entity)
     {
@@ -32,11 +32,11 @@ public class AdvancedEntityTextureHandler implements AutoCloseable
 
     private AdvancedEntityTextureHandler.Instance getEntityInstance(AbstractExosuit entity) 
     {
-        AdvancedEntityTextureHandler.Instance wantedInstance = this.loadedEntities.get(entity.getUniqueID().toString());
+        AdvancedEntityTextureHandler.Instance wantedInstance = this.loadedEntities.get(entity.getEntityId());
        if (wantedInstance == null) 
        {
             wantedInstance = new AdvancedEntityTextureHandler.Instance(entity);
-            this.loadedEntities.put(entity.getUniqueID().toString(), wantedInstance);
+            this.loadedEntities.put(entity.getEntityId(), wantedInstance);
        }
        return wantedInstance;
     }
@@ -54,24 +54,25 @@ public class AdvancedEntityTextureHandler implements AutoCloseable
     @SideOnly(Side.CLIENT)
     class Instance
     {
-        private final AbstractExosuit entity;
+        private final int entityId;
         private DynamicTexture entityTexture;
         private ResourceLocation location;
 
         private Instance(AbstractExosuit exosuit)
         {
-            this.entity = exosuit;
+            this.entityId = exosuit.getEntityId();
             this.updateEntityTexture();
         }
 
         public void updateEntityTexture()
         {
+            AbstractExosuit entity = (AbstractExosuit)Minecraft.getMinecraft().world.getEntityByID(this.entityId);
             BufferedImage baseImage = this.loadTextureFile(0);
             BufferedImage output = baseImage;
 
-            if (this.entity.getTotalTextureLayers() > 1)
+            if (entity.getTotalTextureLayers() > 1)
             {
-                for (int i = 1; i < this.entity.getTotalTextureLayers(); i++)
+                for (int i = 1; i < entity.getTotalTextureLayers(); i++)
                 {
                     BufferedImage layer = loadTextureFile(i);
                     if(layer != null)
@@ -92,6 +93,7 @@ public class AdvancedEntityTextureHandler implements AutoCloseable
 	    */
         private BufferedImage loadTextureFile(int id)
         {
+            AbstractExosuit entity = (AbstractExosuit)Minecraft.getMinecraft().world.getEntityByID(this.entityId);
 		 	BufferedImage img = new BufferedImage(entity.getTextureLength(), entity.getTextureHeight(), BufferedImage.TYPE_INT_ARGB);
 
             ResourceLocation filelocation = entity.getTextureResource(id);
@@ -124,7 +126,8 @@ public class AdvancedEntityTextureHandler implements AutoCloseable
 	    */
         private BufferedImage combineImages(BufferedImage base, BufferedImage overlay)
         {
-            BufferedImage combined = new BufferedImage(this.entity.getTextureLength(), this.entity.getTextureHeight(), BufferedImage.TYPE_INT_ARGB);
+            AbstractExosuit entity = (AbstractExosuit)Minecraft.getMinecraft().world.getEntityByID(this.entityId);
+            BufferedImage combined = new BufferedImage(entity.getTextureLength(), entity.getTextureHeight(), BufferedImage.TYPE_INT_ARGB);
 
             Graphics2D g = combined.createGraphics();
             g.drawImage(base, 0, 0, null);

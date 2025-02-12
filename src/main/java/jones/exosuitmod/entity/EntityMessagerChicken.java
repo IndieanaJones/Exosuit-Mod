@@ -181,6 +181,9 @@ public class EntityMessagerChicken extends AbstractExosuit
             this.setLegUpgradeStatus(1);
             this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.1875D);
         }
+        this.dataManager.setDirty(EGG_UPGRADE_STATUS);
+        this.dataManager.setDirty(FEATHER_UPGRADE_STATUS);
+        this.dataManager.setDirty(LEG_UPGRADE_STATUS);
     }
 
     public void onDoubleJump()
