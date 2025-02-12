@@ -1,5 +1,6 @@
 package jones.exosuitmod.event;
 
+import jones.exosuitmod.client.gui.basicui.ExosuitArmorOverlay;
 import jones.exosuitmod.client.gui.basicui.ExosuitCooldownOverlay;
 import jones.exosuitmod.client.gui.basicui.ExosuitHealthbarOverlay;
 import jones.exosuitmod.entity.AbstractExosuit;
@@ -86,6 +87,7 @@ public class EventRenderHandler
         {
             ExosuitHealthbarOverlay.INSTANCE.renderHUD(event.getResolution(), player);
             ExosuitCooldownOverlay.INSTANCE.renderHUD(event.getResolution(), player);
+            ExosuitArmorOverlay.INSTANCE.renderHUD(event.getResolution(), player);
         }
 	}
 

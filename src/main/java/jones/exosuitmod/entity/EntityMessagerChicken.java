@@ -4,6 +4,8 @@ import net.minecraft.world.World;
 import jones.exosuitmod.ExosuitMod;
 import jones.exosuitmod.inventory.ExosuitInventory;
 import jones.exosuitmod.item.ItemInit;
+import jones.exosuitmod.network.PacketInit;
+import jones.exosuitmod.network.packets.PacketChickenFlapClient;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -28,7 +30,7 @@ public class EntityMessagerChicken extends AbstractExosuit
     public float wingRotDelta = 1.0F;
 
     public int eggUpgradeStatus = 0;
-    public int doubleJumpUpgradeStatus = 0;
+    public int featherUpgradeStatus = 0;
 
     public EntityMessagerChicken(World worldIn) 
     {
@@ -121,7 +123,7 @@ public class EntityMessagerChicken extends AbstractExosuit
     public void updateExosuitCapabilities()
     {
         ItemStack eggUpgradeSlot = inventory.getStackInSlot(0);
-        ItemStack doubleJumpUpgradeSlot = inventory.getStackInSlot(1);
+        ItemStack featherUpgradeSlot = inventory.getStackInSlot(1);
 
         //Egg ability
         if(eggUpgradeSlot.getItem() == Items.AIR)
@@ -141,16 +143,29 @@ public class EntityMessagerChicken extends AbstractExosuit
         }
 
         //Double jump
-        if(doubleJumpUpgradeSlot.getItem() == Items.AIR)
+        if(featherUpgradeSlot.getItem() == Items.AIR)
         {
-            doubleJumpUpgradeStatus = 0;
+            featherUpgradeStatus = 0;
             this.setMaxMidairJumps(0);
+            this.getEntityAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(0D);
         }
-        else if(doubleJumpUpgradeSlot.getItem() == ItemInit.EXOSUIT_CHICKEN_DOUBLE_JUMP_MK1)
+        else if(featherUpgradeSlot.getItem() == ItemInit.EXOSUIT_CHICKEN_DOUBLE_JUMP_MK1)
         {
-            doubleJumpUpgradeStatus = 1;
+            featherUpgradeStatus = 1;
             this.setMaxMidairJumps(1);
+            this.getEntityAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(0D);
         }
+        else if(featherUpgradeSlot.getItem() == ItemInit.EXOSUIT_CHICKEN_ARMOR_MK1)
+        {
+            featherUpgradeStatus = 2;
+            this.setMaxMidairJumps(0);
+            this.getEntityAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(10D);
+        }
+    }
+
+    public void onDoubleJump()
+    {
+        PacketInit.PACKET_HANDLER_INSTANCE.sendToServer(new PacketChickenFlapClient(this));
     }
 
     public void onLivingUpdate()

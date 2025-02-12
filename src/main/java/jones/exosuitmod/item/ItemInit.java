@@ -18,7 +18,8 @@ public class ItemInit
 
     public static final ExosuitModItemBase EXOSUIT_EGG_UPGRADE_MK1 = new ExosuitModItemBase("exosuit_egg_upgrade_mk1", "An upgrade for the Messager Chicken.\nAllows eggs to be thrown as opposed to be laid, as well as greatly decreasing the cooldown.");
     public static final ExosuitModItemBase EXOSUIT_EGG_UPGRADE_MK2 = new ExosuitModItemBase("exosuit_egg_upgrade_mk2", "An upgrade for the Messager Chicken.\nThrown eggs now explode on contact.");
-    public static final ExosuitModItemBase EXOSUIT_CHICKEN_DOUBLE_JUMP_MK1 = new ExosuitModItemBase("exosuit_chicken_double_jump_mk1", "An upgrade for the Messager Chicken.\nAllows a second jump to be performed mid-air. Jumps are recharged upon landing.");
+    public static final ExosuitModItemBase EXOSUIT_CHICKEN_DOUBLE_JUMP_MK1 = new ExosuitModItemBase("exosuit_chicken_double_jump_mk1", "An upgrade for the Messager Chicken.\nAllows a second jump to be performed mid-air. Jumps are recharged upon landing.\nIncompatible with Iron Feathers.");
+    public static final ExosuitModItemBase EXOSUIT_CHICKEN_ARMOR_MK1 = new ExosuitModItemBase("exosuit_chicken_armor_mk1", "An upgrade for the Messager Chicken.\nProvides the Messager Chicken with 10 armor.\nIncompatible with Double Jump.");
     public static final ExosuitModItemBase EXOSUIT_EXPLOSIVE_EGG = new ExosuitModItemBase("exosuit_explosive_egg", "The sprite for the Messager Chicken's explosive egg.\nThis is just here for sprite purposes, you're not meant to get this normally.");
 
 	@SubscribeEvent

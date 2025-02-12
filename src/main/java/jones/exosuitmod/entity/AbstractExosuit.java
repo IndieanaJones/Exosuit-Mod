@@ -235,6 +235,11 @@ public class AbstractExosuit extends EntityCreature implements IInventoryChanged
         this.jumpPower = 0.5F;
     }
 
+    public void onDoubleJump()
+    {
+
+    }
+
     public boolean attackEntityFrom(DamageSource source, float amount)
     {
         Entity entity = source.getTrueSource();
@@ -335,6 +340,7 @@ public class AbstractExosuit extends EntityCreature implements IInventoryChanged
             }
             else if(this.jumpPower > 0.0F && this.currentMidairJumps > 0 && this.motionY < 0)
             {
+                onDoubleJump();
                 currentMidairJumps--;
                 this.motionY = (double)this.jumpPower;
 

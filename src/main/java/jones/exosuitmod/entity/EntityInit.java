@@ -29,7 +29,7 @@ public class EntityInit
     {
         registerEntity("morph_dragon", (Class<? extends Entity>)EntityMorphDragon.class, 847, 100, 1, false, 5582119, 13079892);
         registerEntity("messager_chicken", (Class<? extends Entity>)EntityMessagerChicken.class, 848, 100, 1, false, 5582119, 13079892);
-        registerEntity("exosuit_explosive_egg", (Class<? extends Entity>)EntityExosuitExplosiveEgg.class, 849, 100, 1, false);
+        registerEntity("exosuit_explosive_egg", (Class<? extends Entity>)EntityExosuitExplosiveEgg.class, 849, 128, 10, true);
     }
     
     private static void registerEntity(final String name, final Class<? extends Entity> entity, final int id, final int range, int frequency, Boolean sendVelocity) 

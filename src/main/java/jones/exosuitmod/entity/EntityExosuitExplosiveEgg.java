@@ -15,27 +15,27 @@ public class EntityExosuitExplosiveEgg extends EntityThrowable
 {
     public float explosionRadius = 1.5f;
 
-    public EntityExosuitExplosiveEgg(World p_i1779_1_) 
+    public EntityExosuitExplosiveEgg(World worldIn) 
     {
-        super(p_i1779_1_);
+        super(worldIn);
     }
 
-    public EntityExosuitExplosiveEgg(World p_i1780_1_, EntityLivingBase p_i1780_2_) 
+    public EntityExosuitExplosiveEgg(World worldIn, EntityLivingBase throwerIn) 
     {
-        super(p_i1780_1_, p_i1780_2_);
+        super(worldIn, throwerIn);
     }
 
-    public EntityExosuitExplosiveEgg(World p_i1781_1_, double p_i1781_2_, double p_i1781_4_, double p_i1781_6_) 
+    public EntityExosuitExplosiveEgg(World worldIn, double x, double y, double z) 
     {
-        super(p_i1781_1_, p_i1781_2_, p_i1781_4_, p_i1781_6_);
+        super(worldIn, x, y, z);
     }
 
     @SideOnly(Side.CLIENT)
-    public void handleStatusUpdate(byte p_70103_1_) 
+    public void handleStatusUpdate(byte id) 
     {
-        if (p_70103_1_ == 3) 
+        if (id == 3) 
         {
-            for(int lvt_4_1_ = 0; lvt_4_1_ < 8; ++lvt_4_1_) 
+            for(int ticker = 0; ticker < 8; ++ticker) 
             {
                 this.world.spawnParticle(EnumParticleTypes.ITEM_CRACK, this.posX, this.posY, this.posZ, ((double)this.rand.nextFloat() - 0.5) * 0.08, ((double)this.rand.nextFloat() - 0.5) * 0.08, ((double)this.rand.nextFloat() - 0.5) * 0.08, new int[]{Item.getIdFromItem(ItemInit.EXOSUIT_EXPLOSIVE_EGG)});
             }
@@ -51,9 +51,11 @@ public class EntityExosuitExplosiveEgg extends EntityThrowable
             rayResult.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), 0.0F);
         }
 
-        this.world.createExplosion(this, this.posX, this.posY, this.posZ, (float)this.explosionRadius, false);
-
-        this.world.setEntityState(this, (byte)3);
-        this.setDead();
+        if (!this.world.isRemote) 
+        {
+            this.world.createExplosion(this, this.posX, this.posY, this.posZ, (float)this.explosionRadius, false);
+            this.world.setEntityState(this, (byte)3);
+            this.setDead();
+        }
     }
 }

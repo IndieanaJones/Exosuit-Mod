@@ -1,5 +1,6 @@
 package jones.exosuitmod.network;
 
+import jones.exosuitmod.network.packets.PacketChickenFlapClient;
 import jones.exosuitmod.network.packets.PacketSendClick;
 import jones.exosuitmod.network.packets.PacketSendExosuitCooldown;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -15,5 +16,6 @@ public class PacketInit
     {
         PACKET_HANDLER_INSTANCE.registerMessage(PacketSendClick.SendClickHandler.class, PacketSendClick.class, 0, Side.SERVER);
         PACKET_HANDLER_INSTANCE.registerMessage(PacketSendExosuitCooldown.SendExosuitCooldownHandler.class, PacketSendExosuitCooldown.class, 1, Side.CLIENT);
+        PACKET_HANDLER_INSTANCE.registerMessage(PacketChickenFlapClient.ChickenFlapClientHandler.class, PacketChickenFlapClient.class, 2, Side.SERVER);
     }
 }
