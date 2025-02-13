@@ -2,14 +2,13 @@ package jones.exosuitmod.entity;
 
 import javax.annotation.Nullable;
 
-import jones.exosuitmod.entity.render.AdvancedEntityTextureHandler;
 import jones.exosuitmod.inventory.ExosuitInventory;
 import jones.exosuitmod.network.PacketInit;
 import jones.exosuitmod.network.packets.PacketSendExosuitCooldown;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
@@ -29,10 +28,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class AbstractExosuit extends EntityCreature implements IInventoryChangedListener
+public class AbstractExosuit extends EntityMob implements IInventoryChangedListener
 {
-    private int ticksUntilTextureRefresh = 20;
-
     public boolean leftClickPressed = false;
     public boolean rightClickPressed = false;
 
@@ -162,16 +159,6 @@ public class AbstractExosuit extends EntityCreature implements IInventoryChanged
             leftClickCooldown--;
         if(rightClickCooldown > 0)
             rightClickCooldown--;
-
-        if(this.world.isRemote)
-        {
-            this.ticksUntilTextureRefresh--;
-            if(this.ticksUntilTextureRefresh <= 0)
-            {
-                AdvancedEntityTextureHandler.INSTANCE.updateExosuitTexture(this);
-                this.ticksUntilTextureRefresh = 10 + this.rand.nextInt(30);
-            }
-        }
     }
 
     public boolean canDespawn()

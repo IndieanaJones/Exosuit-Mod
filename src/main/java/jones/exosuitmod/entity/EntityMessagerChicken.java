@@ -4,6 +4,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import jones.exosuitmod.ExosuitMod;
+import jones.exosuitmod.entity.render.AdvancedEntityTextureHandler;
 import jones.exosuitmod.inventory.ExosuitInventory;
 import jones.exosuitmod.item.ItemInit;
 import jones.exosuitmod.network.PacketInit;
@@ -35,6 +36,10 @@ public class EntityMessagerChicken extends AbstractExosuit
     public float oFlap;
     public float wingRotDelta = 1.0F;
 
+    public float oldEggUpgradeStatus = 0;
+    public float oldFeatherUpgradeStatus = 0;
+    public float oldLegUpgradeStatus = 0;
+
     private static final DataParameter<Integer> EGG_UPGRADE_STATUS = EntityDataManager.<Integer>createKey(EntityMessagerChicken.class, DataSerializers.VARINT);
     private static final DataParameter<Integer> FEATHER_UPGRADE_STATUS = EntityDataManager.<Integer>createKey(EntityMessagerChicken.class, DataSerializers.VARINT);
     private static final DataParameter<Integer> LEG_UPGRADE_STATUS = EntityDataManager.<Integer>createKey(EntityMessagerChicken.class, DataSerializers.VARINT);
@@ -55,6 +60,18 @@ public class EntityMessagerChicken extends AbstractExosuit
         this.dataManager.register(EGG_UPGRADE_STATUS, Integer.valueOf(0));
         this.dataManager.register(FEATHER_UPGRADE_STATUS, Integer.valueOf(0));
         this.dataManager.register(LEG_UPGRADE_STATUS, Integer.valueOf(0));
+    }
+
+    protected void applyEntityAttributes()
+    {
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(4.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.15D);
+    }
+
+    public float getEyeHeight()
+    {
+        return this.height - 0.05F;
     }
 
     public void onLeftClickPressed(boolean pressed)
@@ -109,18 +126,6 @@ public class EntityMessagerChicken extends AbstractExosuit
             }
         }
         rightClickPressed = pressed;
-    }
-
-    protected void applyEntityAttributes()
-    {
-        super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(4.0D);
-        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.15D);
-    }
-
-    public float getEyeHeight()
-    {
-        return this.height - 0.05F;
     }
 
     public void openGUI(EntityPlayer playerEntity)
@@ -181,9 +186,6 @@ public class EntityMessagerChicken extends AbstractExosuit
             this.setLegUpgradeStatus(1);
             this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.1875D);
         }
-        this.dataManager.setDirty(EGG_UPGRADE_STATUS);
-        this.dataManager.setDirty(FEATHER_UPGRADE_STATUS);
-        this.dataManager.setDirty(LEG_UPGRADE_STATUS);
     }
 
     public void onDoubleJump()
@@ -219,6 +221,14 @@ public class EntityMessagerChicken extends AbstractExosuit
         if (!this.world.isRemote && this.rand.nextInt(900) == 0 && this.deathTime == 0)
         {
             this.heal(1.0F);
+        }
+
+        if(this.world.isRemote && (this.oldEggUpgradeStatus != this.getEggUpgradeStatus() || this.oldFeatherUpgradeStatus != this.getFeatherUpgradeStatus() || this.oldLegUpgradeStatus != this.getLegUpgradeStatus()))
+        {
+            this.oldEggUpgradeStatus = this.getEggUpgradeStatus();
+            this.oldFeatherUpgradeStatus = this.getFeatherUpgradeStatus();
+            this.oldLegUpgradeStatus = this.getLegUpgradeStatus();
+            AdvancedEntityTextureHandler.INSTANCE.updateExosuitTexture(this);
         }
     }
 

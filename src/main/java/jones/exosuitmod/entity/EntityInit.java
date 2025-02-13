@@ -13,7 +13,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.util.ResourceLocation;
 import jones.exosuitmod.ExosuitMod;
 import jones.exosuitmod.entity.render.RenderMessagerChicken;
-import jones.exosuitmod.entity.render.RenderMorphDragon;
+import jones.exosuitmod.entity.render.RenderPatriotExosuit;
 import jones.exosuitmod.item.ItemInit;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.Render;
@@ -27,9 +27,9 @@ public class EntityInit
 	@SubscribeEvent
     public static void registerEntities(final RegistryEvent.Register<EntityEntry> event) 
     {
-        registerEntity("morph_dragon", (Class<? extends Entity>)EntityMorphDragon.class, 847, 128, 1, false, 5582119, 13079892);
         registerEntity("messager_chicken", (Class<? extends Entity>)EntityMessagerChicken.class, 848, 128, 1, false, 5582119, 13079892);
         registerEntity("exosuit_explosive_egg", (Class<? extends Entity>)EntityExosuitExplosiveEgg.class, 849, 128, 10, true);
+        registerEntity("patriot_exosuit", (Class<? extends Entity>)EntityPatriotExosuit.class, 850, 128, 1, false, 5582119, 13079892);
     }
     
     private static void registerEntity(final String name, final Class<? extends Entity> entity, final int id, final int range, int frequency, Boolean sendVelocity) 
@@ -46,14 +46,6 @@ public class EntityInit
     @SubscribeEvent
 	public static void registerEntityRenders(final ModelRegistryEvent event)
     {
-        RenderingRegistry.registerEntityRenderingHandler(EntityMorphDragon.class, new IRenderFactory<EntityMorphDragon>() 
-        {
-            public Render<? super EntityMorphDragon> createRenderFor(final RenderManager manager) 
-            {
-                return (Render<? super EntityMorphDragon>)new RenderMorphDragon(manager, 1.0f);
-            }
-        });
-
         RenderingRegistry.registerEntityRenderingHandler(EntityMessagerChicken.class, new IRenderFactory<EntityMessagerChicken>() 
         {
             public Render<? super EntityMessagerChicken> createRenderFor(final RenderManager manager) 
@@ -68,6 +60,14 @@ public class EntityInit
             public Render<? super EntityExosuitExplosiveEgg> createRenderFor(final RenderManager manager) 
             {
                 return (Render<? super EntityExosuitExplosiveEgg>)new RenderSnowball(manager, ItemInit.EXOSUIT_EXPLOSIVE_EGG, Minecraft.getMinecraft().getRenderItem());
+            }
+        });
+
+        RenderingRegistry.registerEntityRenderingHandler(EntityPatriotExosuit.class, new IRenderFactory<EntityPatriotExosuit>() 
+        {
+            public Render<? super EntityPatriotExosuit> createRenderFor(final RenderManager manager) 
+            {
+                return (Render<? super EntityPatriotExosuit>)new RenderPatriotExosuit(manager);
             }
         });
     }
