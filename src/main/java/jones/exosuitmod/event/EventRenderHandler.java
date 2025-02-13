@@ -6,8 +6,10 @@ import jones.exosuitmod.client.gui.basicui.ExosuitHealthbarOverlay;
 import jones.exosuitmod.entity.AbstractExosuit;
 import jones.exosuitmod.entity.render.AdvancedEntityTextureHandler;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.event.world.WorldEvent;
@@ -16,6 +18,7 @@ import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -99,5 +102,19 @@ public class EventRenderHandler
     public static void onWorldUnload(WorldEvent.Unload event)
     {
         AdvancedEntityTextureHandler.INSTANCE.close();
+    }
+
+    @SideOnly(Side.CLIENT)
+    @SubscribeEvent
+    public static void adjustCamera(EntityViewRenderEvent.CameraSetup event)
+    {
+        Minecraft.getMinecraft().getRenderViewEntity().getPositionVector();
+        if(Minecraft.getMinecraft().gameSettings.thirdPersonView > 0)
+        {
+            double d3 = (double)(4 + (4.0F - 4) * event.getRenderPartialTicks());
+            if(Minecraft.getMinecraft().gameSettings.thirdPersonView == 1)
+                d3 *= -1;
+            GlStateManager.translate(0.0F, 0.0F, (float)d3);
+        }
     }
 }

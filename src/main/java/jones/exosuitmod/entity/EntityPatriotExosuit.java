@@ -36,6 +36,11 @@ public class EntityPatriotExosuit extends AbstractExosuit
         return 4F;
     }
 
+    public void jump()
+    {
+        this.jumpPower = 0.4F;
+    }
+
     public void travel(float strafe, float vertical, float forward)
     {
         super.travel(strafe, vertical, forward);
