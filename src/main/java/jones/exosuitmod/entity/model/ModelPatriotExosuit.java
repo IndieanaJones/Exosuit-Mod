@@ -138,5 +138,8 @@ public class ModelPatriotExosuit extends ModelBase
 		this.RightLeg.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * -limbSwingAmount;
 		this.Minigun.rotateAngleX = headPitch * 0.017453292F;
 		this.RocketLauncher.rotateAngleX = headPitch * 0.017453292F;
+
+		float minigunRotationSpeed = exosuit.minigunRotation;
+		this.Barrel.rotateAngleZ += minigunRotationSpeed * 0.004F;
 	}
 }

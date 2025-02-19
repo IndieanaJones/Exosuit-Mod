@@ -18,7 +18,6 @@ import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -108,10 +107,16 @@ public class EventRenderHandler
     @SubscribeEvent
     public static void adjustCamera(EntityViewRenderEvent.CameraSetup event)
     {
+        EntityPlayer player = Minecraft.getMinecraft().player;
+        if (!player.isRiding() || !(player.getRidingEntity() instanceof AbstractExosuit))
+            return;
+        AbstractExosuit exosuit = (AbstractExosuit)player.getRidingEntity();
+        if(exosuit.getExtraThirdPersonZoom() == 0)
+            return;
         Minecraft.getMinecraft().getRenderViewEntity().getPositionVector();
         if(Minecraft.getMinecraft().gameSettings.thirdPersonView > 0)
         {
-            double d3 = (double)(4 + (4.0F - 4) * event.getRenderPartialTicks());
+            double d3 = (double)exosuit.getExtraThirdPersonZoom();
             if(Minecraft.getMinecraft().gameSettings.thirdPersonView == 1)
                 d3 *= -1;
             GlStateManager.translate(0.0F, 0.0F, (float)d3);

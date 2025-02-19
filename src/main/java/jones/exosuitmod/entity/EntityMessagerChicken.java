@@ -62,7 +62,7 @@ public class EntityMessagerChicken extends AbstractExosuit
         this.dataManager.register(LEG_UPGRADE_STATUS, Integer.valueOf(0));
     }
 
-    protected void applyEntityAttributes()
+    public void applyEntityAttributes()
     {
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(4.0D);

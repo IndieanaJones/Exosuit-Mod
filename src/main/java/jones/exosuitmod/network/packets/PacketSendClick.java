@@ -51,10 +51,15 @@ public class PacketSendClick implements IMessage
             AbstractExosuit exosuit = (AbstractExosuit) player.getRidingEntity();
 
             if(message.clickType == 0)
+            {
+                exosuit.leftClickPressed = message.setPressed;
                 exosuit.onLeftClickPressed(message.setPressed);
+            }
             else
+            {
+                exosuit.rightClickPressed = message.setPressed;
                 exosuit.onRightClickPressed(message.setPressed);
-            
+            }
             return null;
         }
     }
