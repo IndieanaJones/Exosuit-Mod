@@ -1,18 +1,26 @@
 package jones.exosuitmod.entity;
 
 import jones.exosuitmod.ExosuitMod;
+import jones.exosuitmod.item.ItemInit;
+import jones.exosuitmod.sound.SoundHandler;
+import net.minecraft.block.Block;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import net.minecraft.entity.projectile.EntityTippedArrow;
+import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 
 public class EntityPatriotExosuit extends AbstractExosuit
@@ -78,6 +86,32 @@ public class EntityPatriotExosuit extends AbstractExosuit
                 ticksUntilNextMinigunBullet = 4;
             }
         }
+    }
+
+    public boolean processInteract(EntityPlayer player, EnumHand hand)
+    {
+        if (player.getHeldItem(EnumHand.MAIN_HAND).getItem() == ItemInit.EXOSUIT_REPAIR_KIT)
+        {
+            this.heal(20);
+            player.getCooldownTracker().setCooldown(player.getHeldItem(EnumHand.MAIN_HAND).getItem(), 300);
+            this.playSound(SoundHandler.EXOSUIT_REPAIR, 1.0F, 1.0F);
+        }
+        return super.processInteract(player, hand);
+    }
+
+    protected SoundEvent getHurtSound(DamageSource damageSourceIn)
+    {
+        return SoundHandler.EXOSUIT_HURT;
+    }
+
+    protected SoundEvent getDeathSound()
+    {
+        return SoundEvents.ENTITY_IRONGOLEM_DEATH;
+    }
+
+    protected void playStepSound(BlockPos pos, Block blockIn)
+    {
+        this.playSound(SoundHandler.EXOSUIT_STEP, 0.15F, 1.0F);
     }
 
     public Boolean getMinigunSpinning() 

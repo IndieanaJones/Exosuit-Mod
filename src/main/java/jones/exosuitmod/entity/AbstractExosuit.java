@@ -145,8 +145,8 @@ public class AbstractExosuit extends EntityCreature implements IInventoryChanged
     public void addPassenger(Entity passenger)
     {
         super.addPassenger(passenger);
-        this.updateCooldown("left", Math.max(30, this.leftClickCooldown), true);
-        this.updateCooldown("right", Math.max(30, rightClickCooldown), true);
+        this.updateCooldown("left", Math.min(Math.max(30, this.leftClickCooldown), this.dataManager.get(MAX_LEFT_CLICK_COOLDOWN)), true);
+        this.updateCooldown("right", Math.min(Math.max(30, rightClickCooldown), this.dataManager.get(MAX_RIGHT_CLICK_COOLDOWN)), true);
     }
 
     public void updatePassenger(Entity passenger)

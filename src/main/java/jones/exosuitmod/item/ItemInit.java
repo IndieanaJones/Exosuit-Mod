@@ -16,6 +16,8 @@ public class ItemInit
 {
     public static final List<Item> ITEMS = new ArrayList<Item>();
 
+    public static final ExosuitModItemBase EXOSUIT_REPAIR_KIT = new ExosuitModItemBase("exosuit_repair_kit", "A repair kit for larger exosuits. Heals 10 hearts.\nConsumed on use.");
+
     public static final ExosuitModItemBase EXOSUIT_EGG_UPGRADE_MK1 = new ExosuitModItemBase("exosuit_egg_upgrade_mk1", "An upgrade for the Messager Chicken.\nAllows eggs to be thrown as opposed to be laid, as well as greatly decreasing the cooldown.");
     public static final ExosuitModItemBase EXOSUIT_EGG_UPGRADE_MK2 = new ExosuitModItemBase("exosuit_egg_upgrade_mk2", "An upgrade for the Messager Chicken.\nThrown eggs now explode on contact.");
     public static final ExosuitModItemBase EXOSUIT_CHICKEN_SPEED_MK1 = new ExosuitModItemBase("exosuit_chicken_speed_mk1", "An upgrade for the Messager Chicken.\nIncreases the chicken's speed by 25%.");
