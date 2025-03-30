@@ -9,6 +9,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
@@ -103,6 +105,7 @@ public class EventRenderHandler
         AdvancedEntityTextureHandler.INSTANCE.close();
     }
 
+    //Zooms out the third person camera further away, since we're in a big hulking mech.
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public static void adjustCamera(EntityViewRenderEvent.CameraSetup event)
@@ -113,13 +116,31 @@ public class EventRenderHandler
         AbstractExosuit exosuit = (AbstractExosuit)player.getRidingEntity();
         if(exosuit.getExtraThirdPersonZoom() == 0)
             return;
+
+        Vec3d cameraPos = player.getPositionEyes((float)event.getRenderPartialTicks());
+        Vec3d lookDirection = player.getLook(1.0F);
+        double zoomDistance = exosuit.getExtraThirdPersonZoom() + 4;
+        float targetDirection = 1;
+        if(Minecraft.getMinecraft().gameSettings.thirdPersonView == 1)
+            targetDirection = -1;
+        Vec3d targetPos = cameraPos.add(new Vec3d(lookDirection.x * zoomDistance * targetDirection, lookDirection.y * zoomDistance * targetDirection, lookDirection.z * zoomDistance * targetDirection));
+        RayTraceResult rayTraceResult = player.world.rayTraceBlocks(cameraPos, targetPos);
+        if (rayTraceResult != null && rayTraceResult.typeOfHit == RayTraceResult.Type.BLOCK) 
+        {
+            // Adjust the camera to just in front of the hit block
+            targetPos = new Vec3d(rayTraceResult.hitVec.x, rayTraceResult.hitVec.y, rayTraceResult.hitVec.z);
+        }
+        double finalAlteration = targetPos.distanceTo(cameraPos);
+        if(finalAlteration < 4.1)
+            return;
+        finalAlteration -= 4.1;
+        
         Minecraft.getMinecraft().getRenderViewEntity().getPositionVector();
         if(Minecraft.getMinecraft().gameSettings.thirdPersonView > 0)
         {
-            double d3 = (double)exosuit.getExtraThirdPersonZoom();
             if(Minecraft.getMinecraft().gameSettings.thirdPersonView == 1)
-                d3 *= -1;
-            GlStateManager.translate(0.0F, 0.0F, (float)d3);
+                finalAlteration *= -1;
+            GlStateManager.translate(0.0F, 0.0F, (float)finalAlteration);
         }
     }
 }

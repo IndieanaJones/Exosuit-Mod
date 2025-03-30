@@ -162,6 +162,8 @@ public class AbstractExosuit extends EntityCreature implements IInventoryChanged
         super.removePassenger(passenger);
         EntityPlayer playerPassenger = (EntityPlayer)passenger;
         playerPassenger.eyeHeight = playerPassenger.getDefaultEyeHeight();
+        leftClickPressed = false;
+        rightClickPressed = false;
     }
 
     public boolean canBeSteered()

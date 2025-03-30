@@ -40,6 +40,18 @@ public class ExosuitModItemBase extends Item
         ItemInit.ITEMS.add(this);
     }
 
+    public ExosuitModItemBase(String name, String tooltip, int stackSize) 
+    {
+        this.setUnlocalizedName(name);
+        this.setRegistryName(name);
+        this.setCreativeTab(ExosuitModCreativeTab.INSTANCE);
+        this.variantIn = "inventory";
+        this.tooltipString = tooltip;
+        this.maxStackSize = stackSize;
+
+        ItemInit.ITEMS.add(this);
+    }
+
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
     {

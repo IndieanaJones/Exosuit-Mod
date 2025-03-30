@@ -4,6 +4,7 @@ import jones.exosuitmod.ExosuitMod;
 import jones.exosuitmod.item.ItemInit;
 import jones.exosuitmod.sound.SoundHandler;
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.datasync.DataParameter;
@@ -15,10 +16,12 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.entity.projectile.EntityLargeFireball;
 import net.minecraft.entity.projectile.EntityTippedArrow;
 import net.minecraft.init.SoundEvents;
 
@@ -79,7 +82,7 @@ public class EntityPatriotExosuit extends AbstractExosuit
             this.setMinigunSpinning(this.rightClickPressed);
             this.ticksUntilNextMinigunBullet = Math.max(this.ticksUntilNextMinigunBullet - 1, 0);
         }
-        this.minigunRotation = Math.max(0, Math.min(this.minigunRotation + (this.getMinigunSpinning() ? 2.5F : -2.5F), 100));
+        this.minigunRotation = Math.max(0, Math.min(this.minigunRotation + (this.getMinigunSpinning() ? 5F : -5F), 100));
         if(this.getMinigunSpinning())
         {
             if(!this.world.isRemote)
@@ -104,11 +107,22 @@ public class EntityPatriotExosuit extends AbstractExosuit
     {
         if (!this.world.isRemote && player.getHeldItem(EnumHand.MAIN_HAND).getItem() == ItemInit.EXOSUIT_REPAIR_KIT && this.getHealth() < this.getMaxHealth())
         {
-            this.heal(20);
+            this.heal(10);
             player.getCooldownTracker().setCooldown(player.getHeldItem(EnumHand.MAIN_HAND).getItem(), 300);
+            player.getHeldItem(EnumHand.MAIN_HAND).shrink(1);
             this.playSound(SoundHandler.EXOSUIT_REPAIR, 1.0F, 1.0F);
         }
         return super.processInteract(player, hand);
+    }
+
+    @Override
+    public void setFire(int seconds) 
+    {
+    }
+
+    @Override
+    public void fall(float distance, float damageMultiplier)
+    {
     }
 
     public void addPotionEffect(PotionEffect potioneffectIn)
@@ -180,17 +194,14 @@ public class EntityPatriotExosuit extends AbstractExosuit
         Vec3d direction = crosshairPosition.subtract(firePosition).normalize();
 
         arrow.setPosition(firePosition.x, firePosition.y + (d3), firePosition.z);
-        arrow.shoot(direction.x, direction.y, direction.z, (float) 4.0F, 5F);
+        arrow.shoot(direction.x, direction.y, direction.z, (float) 5.0F, 3F);
         this.world.spawnEntity(arrow);
         this.world.playSound((EntityPlayer) null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_SKELETON_SHOOT, this.getSoundCategory(), 1.0F, 1.0F + (this.getRNG().nextFloat() - this.getRNG().nextFloat()) * 0.2F);
     }
 
     public void shootRocketLauncherProjectile()
     {
-        EntityTippedArrow arrow = new EntityTippedArrow(this.world, this);
         Vec3d vec3d = this.getLook(1.0F);
-
-        double d3 = vec3d.y;
 
         double xOffset = 2;
         Vec3d entityPosition = this.getPositionEyes(1.0F);  // Entity's eye position (or another reference point)
@@ -208,20 +219,39 @@ public class EntityPatriotExosuit extends AbstractExosuit
 
         Vec3d firePosition = entityPosition.add(new Vec3d(offsetX, offsetY, offsetZ));
 
+        final double d1 = 16.0;
+        final double d2 = vec3d.x * d1;
+        final double d3 = vec3d.y * d1;
+        final double d4 = vec3d.z * d1;
         Vec3d crosshairPosition = this.getCrosshairTargetPosition(world);
         Vec3d direction = crosshairPosition.subtract(firePosition).normalize();
+        final EntityLargeFireball fireball = new EntityLargeFireball(this.world, this, d2, d3, d4);
+        fireball.motionX = direction.x * 3;
+        fireball.motionY = direction.y * 3;
+        fireball.motionZ = direction.z * 3;
+        fireball.explosionPower = 4;
+        fireball.posX = firePosition.x;
+        fireball.posY = firePosition.y;
+        fireball.posZ = firePosition.z;
+        this.world.spawnEntity((Entity)fireball);
 
-        arrow.setPosition(firePosition.x, firePosition.y + (d3), firePosition.z);
-        arrow.shoot(direction.x, direction.y, direction.z, (float) 4.0F, 5F);
-        this.world.spawnEntity(arrow);
-        this.world.playSound((EntityPlayer) null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_SKELETON_SHOOT, this.getSoundCategory(), 1.0F, 1.0F + (this.getRNG().nextFloat() - this.getRNG().nextFloat()) * 0.2F);
+        this.world.playSound((EntityPlayer) null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_FIREWORK_LAUNCH, this.getSoundCategory(), 1.0F, 1.0F + (this.getRNG().nextFloat() - this.getRNG().nextFloat()) * 0.2F);
     }
 
     private Vec3d getCrosshairTargetPosition(World world) 
     {
-        Vec3d playerLook = this.getLookVec();
-        double distance = 20.0;
-        return this.getPositionVector().add(new Vec3d(playerLook.x * distance, (playerLook.y * distance) + 4.5F, playerLook.z * distance));
+        float maxDistance = 100;
+        Vec3d lookDirection = this.getLook(1.0F);
+        Vec3d cameraPos = this.getPositionEyes(1.0F);
+        Vec3d targetPos = cameraPos.add(new Vec3d(lookDirection.x * maxDistance, lookDirection.y * maxDistance, lookDirection.z * maxDistance));
+
+        RayTraceResult rayTraceResult = this.world.rayTraceBlocks(cameraPos, targetPos);
+        if (rayTraceResult != null) 
+        {
+            // Adjust the camera to just in front of the hit block
+            targetPos = new Vec3d(rayTraceResult.hitVec.x, rayTraceResult.hitVec.y, rayTraceResult.hitVec.z);
+        }
+        return targetPos;
     }
 
     public int getTextureLength()
