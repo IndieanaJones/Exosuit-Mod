@@ -12,16 +12,18 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ExosuitHealthbarOverlay extends Gui
+public class ExosuitHealthbarOverlayOld extends Gui
 {
     private static final ResourceLocation EXOSUITUI = new ResourceLocation(ExosuitMod.MODID + ":textures/client/gui/exosuitui.png");
 
-    public static final ExosuitHealthbarOverlay INSTANCE = new ExosuitHealthbarOverlay();
+    public static final ExosuitHealthbarOverlayOld INSTANCE = new ExosuitHealthbarOverlayOld();
+
+    public static int healthbar_height = 39;
 
 	@SideOnly(Side.CLIENT)
 	public void renderHUD(ScaledResolution resolution, EntityPlayer player) 
     {
-        int healthbar_height = 39;
+        healthbar_height = 39;
 
         Entity tmp = player.getRidingEntity();
         if (!(tmp instanceof EntityLivingBase)) return;
@@ -33,23 +35,33 @@ public class ExosuitHealthbarOverlay extends Gui
         EntityLivingBase mount = (EntityLivingBase)tmp;
         int health = (int)Math.ceil((double)mount.getHealth());
         float healthMax = mount.getMaxHealth();
-        float healthPercentage = health / healthMax;
-        int hearts = 10;
+        int hearts = (int)(healthMax + 0.5F) / 2;
 
-        int top = resolution.getScaledHeight() - healthbar_height;
-        for (int i = 0; i < hearts; i++)
+        if (hearts > 30) hearts = 30;
+
+        for (int heart = 0; hearts > 0; heart += 20)
         {
-            int x = left_align + i * 8;
-            drawTexturedModalRect(x, top, 0, 0, 9, 9);
+            int top = resolution.getScaledHeight() - healthbar_height;
 
-            if ((i + 1) * 0.1 <= healthPercentage)
+            int rowCount = Math.min(hearts, 10);
+            hearts -= rowCount;
+
+            for (int i = 0; i < rowCount; ++i)
             {
-                drawTexturedModalRect(x, top, 9, 0, 9, 9);
+                int x = left_align + i * 8;
+                drawTexturedModalRect(x, top, 0, 0, 9, 9);
+
+                if (i * 2 + 1 + heart < health)
+                {
+                    drawTexturedModalRect(x, top, 9, 0, 9, 9);
+                }
+                else if (i * 2 + 1 + heart == health)
+                {
+                    drawTexturedModalRect(x, top, 18, 0, 9, 9);
+                }
             }
-            else if ((i * 0.1) + 0.05 <= healthPercentage)
-            {
-                drawTexturedModalRect(x, top, 18, 0, 9, 9);
-            }
+
+            healthbar_height += 10;
         }
         GlStateManager.disableBlend();
     }

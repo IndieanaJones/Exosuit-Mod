@@ -9,6 +9,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
@@ -18,9 +19,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
 import net.minecraft.entity.projectile.EntityTippedArrow;
-import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 
 public class EntityPatriotExosuit extends AbstractExosuit
@@ -40,7 +39,7 @@ public class EntityPatriotExosuit extends AbstractExosuit
     public void entityInit()
     {
         super.entityInit();
-        this.setMaxLeftClickCooldown(40);
+        this.setMaxLeftClickCooldown(200);
         this.setMaxRightClickCooldown(0);
         this.dataManager.register(MINIGUN_SPINNING, false);
     }
@@ -48,10 +47,23 @@ public class EntityPatriotExosuit extends AbstractExosuit
     public void applyEntityAttributes()
     {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(60.0D);
-        this.getEntityAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(15.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(100.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(20.0D);
         this.getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).setBaseValue(10.0D);
         this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.1D);
+        this.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(1.0D);
+    }
+
+    public void onLeftClickPressed(boolean pressed)
+    {
+        if(this.world.isRemote)
+            return;
+        if(pressed && leftClickCooldown <= 0)
+        {
+            this.shootRocketLauncherProjectile();
+            updateCooldown("left", this.getMaxLeftClickCooldown(), true);
+        }
+        leftClickPressed = pressed;
     }
 
     public float getEyeHeight()
@@ -90,13 +102,17 @@ public class EntityPatriotExosuit extends AbstractExosuit
 
     public boolean processInteract(EntityPlayer player, EnumHand hand)
     {
-        if (player.getHeldItem(EnumHand.MAIN_HAND).getItem() == ItemInit.EXOSUIT_REPAIR_KIT)
+        if (!this.world.isRemote && player.getHeldItem(EnumHand.MAIN_HAND).getItem() == ItemInit.EXOSUIT_REPAIR_KIT && this.getHealth() < this.getMaxHealth())
         {
             this.heal(20);
             player.getCooldownTracker().setCooldown(player.getHeldItem(EnumHand.MAIN_HAND).getItem(), 300);
             this.playSound(SoundHandler.EXOSUIT_REPAIR, 1.0F, 1.0F);
         }
         return super.processInteract(player, hand);
+    }
+
+    public void addPotionEffect(PotionEffect potioneffectIn)
+    {
     }
 
     protected SoundEvent getHurtSound(DamageSource damageSourceIn)
@@ -147,7 +163,39 @@ public class EntityPatriotExosuit extends AbstractExosuit
         double xOffset = -2;
         Vec3d entityPosition = this.getPositionEyes(1.0F);  // Entity's eye position (or another reference point)
         float yaw = this.rotationYaw;  // The entity's yaw (horizontal rotation)
-        float pitch = this.rotationPitch;
+        //float pitch = this.rotationPitch;
+
+        float yawRadians = (float) Math.toRadians(yaw);
+
+        double cosYaw = Math.cos(yawRadians);
+        double sinYaw = Math.sin(yawRadians);
+
+        double offsetX = xOffset * cosYaw;
+        double offsetZ = xOffset * sinYaw;
+        double offsetY = -1.5;
+
+        Vec3d firePosition = entityPosition.add(new Vec3d(offsetX, offsetY, offsetZ));
+
+        Vec3d crosshairPosition = this.getCrosshairTargetPosition(world);
+        Vec3d direction = crosshairPosition.subtract(firePosition).normalize();
+
+        arrow.setPosition(firePosition.x, firePosition.y + (d3), firePosition.z);
+        arrow.shoot(direction.x, direction.y, direction.z, (float) 4.0F, 5F);
+        this.world.spawnEntity(arrow);
+        this.world.playSound((EntityPlayer) null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_SKELETON_SHOOT, this.getSoundCategory(), 1.0F, 1.0F + (this.getRNG().nextFloat() - this.getRNG().nextFloat()) * 0.2F);
+    }
+
+    public void shootRocketLauncherProjectile()
+    {
+        EntityTippedArrow arrow = new EntityTippedArrow(this.world, this);
+        Vec3d vec3d = this.getLook(1.0F);
+
+        double d3 = vec3d.y;
+
+        double xOffset = 2;
+        Vec3d entityPosition = this.getPositionEyes(1.0F);  // Entity's eye position (or another reference point)
+        float yaw = this.rotationYaw;  // The entity's yaw (horizontal rotation)
+        //float pitch = this.rotationPitch;
 
         float yawRadians = (float) Math.toRadians(yaw);
 

@@ -78,7 +78,7 @@ public class EntityMessagerChicken extends AbstractExosuit
     {
         if(this.world.isRemote)
             return;
-        if(!leftClickPressed && pressed && leftClickCooldown <= 0)
+        if(pressed && leftClickCooldown <= 0)
         {
             this.playLivingSound();
 

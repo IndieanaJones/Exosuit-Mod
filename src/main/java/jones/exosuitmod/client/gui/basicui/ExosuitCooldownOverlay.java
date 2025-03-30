@@ -18,7 +18,7 @@ public class ExosuitCooldownOverlay extends Gui
 
     public static final ExosuitCooldownOverlay INSTANCE = new ExosuitCooldownOverlay();
 
-    public static int cooldown_height = 59;
+    public static int cooldown_height = 68;
     public static int cooldown_bar_length = 40;
 
 	@SideOnly(Side.CLIENT)
