@@ -105,12 +105,13 @@ public class EntityPatriotExosuit extends AbstractExosuit
 
     public boolean processInteract(EntityPlayer player, EnumHand hand)
     {
-        if (!this.world.isRemote && player.getHeldItem(EnumHand.MAIN_HAND).getItem() == ItemInit.EXOSUIT_REPAIR_KIT && this.getHealth() < this.getMaxHealth())
+        if (!player.world.isRemote && hand == EnumHand.MAIN_HAND && player.getHeldItem(EnumHand.MAIN_HAND).getItem() == ItemInit.EXOSUIT_REPAIR_KIT && !player.getCooldownTracker().hasCooldown(player.getHeldItem(hand).getItem()) && this.getHealth() < this.getMaxHealth())
         {
-            this.heal(10);
+            this.heal(20);
             player.getCooldownTracker().setCooldown(player.getHeldItem(EnumHand.MAIN_HAND).getItem(), 300);
             player.getHeldItem(EnumHand.MAIN_HAND).shrink(1);
             this.playSound(SoundHandler.EXOSUIT_REPAIR, 1.0F, 1.0F);
+            return true;
         }
         return super.processInteract(player, hand);
     }
@@ -175,9 +176,8 @@ public class EntityPatriotExosuit extends AbstractExosuit
         double d3 = vec3d.y;
 
         double xOffset = -2;
-        Vec3d entityPosition = this.getPositionEyes(1.0F);  // Entity's eye position (or another reference point)
-        float yaw = this.rotationYaw;  // The entity's yaw (horizontal rotation)
-        //float pitch = this.rotationPitch;
+        Vec3d entityPosition = this.getPositionEyes(1.0F);
+        float yaw = this.rotationYaw;
 
         float yawRadians = (float) Math.toRadians(yaw);
 
@@ -204,9 +204,8 @@ public class EntityPatriotExosuit extends AbstractExosuit
         Vec3d vec3d = this.getLook(1.0F);
 
         double xOffset = 2;
-        Vec3d entityPosition = this.getPositionEyes(1.0F);  // Entity's eye position (or another reference point)
-        float yaw = this.rotationYaw;  // The entity's yaw (horizontal rotation)
-        //float pitch = this.rotationPitch;
+        Vec3d entityPosition = this.getPositionEyes(1.0F);
+        float yaw = this.rotationYaw;
 
         float yawRadians = (float) Math.toRadians(yaw);
 
@@ -248,7 +247,6 @@ public class EntityPatriotExosuit extends AbstractExosuit
         RayTraceResult rayTraceResult = this.world.rayTraceBlocks(cameraPos, targetPos);
         if (rayTraceResult != null) 
         {
-            // Adjust the camera to just in front of the hit block
             targetPos = new Vec3d(rayTraceResult.hitVec.x, rayTraceResult.hitVec.y, rayTraceResult.hitVec.z);
         }
         return targetPos;

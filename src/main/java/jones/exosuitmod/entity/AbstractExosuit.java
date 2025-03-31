@@ -184,14 +184,14 @@ public class AbstractExosuit extends EntityCreature implements IInventoryChanged
 
     public boolean processInteract(EntityPlayer player, EnumHand hand)
     {
-        if (!this.isBeingRidden() && player.getHeldItem(EnumHand.MAIN_HAND).getItem() == Items.AIR)
+        if (!this.isBeingRidden() && hand == EnumHand.MAIN_HAND && player.getHeldItem(EnumHand.MAIN_HAND).getItem() == Items.AIR)
         {
             if(player.isSneaking())
             {
                 openGUI(player);
                 return true;
             }
-            if(!this.world.isRemote)
+            if(!player.world.isRemote)
                 player.startRiding(this);
             return true;
         }
