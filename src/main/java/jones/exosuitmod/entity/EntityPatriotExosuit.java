@@ -37,6 +37,7 @@ public class EntityPatriotExosuit extends AbstractExosuit
         this.setSize(2F, 4.5F);
         this.stepHeight = 1;
         this.limbSwing = 1;
+        this.ignoreFrustumCheck = true;
     }
 
     public void entityInit()
