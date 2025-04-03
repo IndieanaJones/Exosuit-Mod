@@ -25,6 +25,9 @@ public class ItemInit
     public static final ExosuitModItemBase EXOSUIT_CHICKEN_ARMOR_MK1 = new ExosuitModItemBase("exosuit_chicken_armor_mk1", "An upgrade for the Messager Chicken.\nProvides the Messager Chicken with 10 armor.\nIncompatible with Double Jump.");
     public static final ExosuitModItemBase EXOSUIT_EXPLOSIVE_EGG = new ExosuitModItemBase("exosuit_explosive_egg", "The sprite for the Messager Chicken's explosive egg.\nThis is just here for sprite purposes, you're not meant to get this normally.");
 
+    public static final ExosuitModItemBase PATRIOT_BULLET_ITEM = new ExosuitModItemBase("patriot_bullet", "The sprite for the Patriot's bullets.\nThis is just here for sprite purposes, you're not meant to get this normally.");
+    public static final ExosuitModItemBase PATRIOT_ROCKET_ITEM = new ExosuitModItemBase("patriot_rocket", "The sprite for the Patriot's rockets.\nThis is just here for sprite purposes, you're not meant to get this normally.");
+
 	@SubscribeEvent
     public static void registerItems(RegistryEvent.Register<Item> event) 
     {

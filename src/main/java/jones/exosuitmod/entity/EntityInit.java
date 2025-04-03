@@ -30,6 +30,8 @@ public class EntityInit
         registerEntity("messager_chicken", (Class<? extends Entity>)EntityMessagerChicken.class, 848, 128, 1, false, 5582119, 13079892);
         registerEntity("exosuit_explosive_egg", (Class<? extends Entity>)EntityExosuitExplosiveEgg.class, 849, 128, 10, true);
         registerEntity("patriot_exosuit", (Class<? extends Entity>)EntityPatriotExosuit.class, 850, 128, 1, false, 5582119, 13079892);
+        registerEntity("patriot_bullet", (Class<? extends Entity>)EntityPatriotBullet.class, 851, 128, 10, true);
+        registerEntity("patriot_rocket", (Class<? extends Entity>)EntityPatriotRocket.class, 852, 128, 10, true);
     }
     
     private static void registerEntity(final String name, final Class<? extends Entity> entity, final int id, final int range, int frequency, Boolean sendVelocity) 
@@ -68,6 +70,24 @@ public class EntityInit
             public Render<? super EntityPatriotExosuit> createRenderFor(final RenderManager manager) 
             {
                 return (Render<? super EntityPatriotExosuit>)new RenderPatriotExosuit(manager);
+            }
+        });
+
+        RenderingRegistry.registerEntityRenderingHandler(EntityPatriotBullet.class, new IRenderFactory<EntityPatriotBullet>() 
+        {
+            @SuppressWarnings({ "rawtypes", "unchecked" })
+            public Render<? super EntityPatriotBullet> createRenderFor(final RenderManager manager) 
+            {
+                return (Render<? super EntityPatriotBullet>)new RenderSnowball(manager, ItemInit.PATRIOT_BULLET_ITEM, Minecraft.getMinecraft().getRenderItem());
+            }
+        });
+
+        RenderingRegistry.registerEntityRenderingHandler(EntityPatriotRocket.class, new IRenderFactory<EntityPatriotRocket>() 
+        {
+            @SuppressWarnings({ "rawtypes", "unchecked" })
+            public Render<? super EntityPatriotRocket> createRenderFor(final RenderManager manager) 
+            {
+                return (Render<? super EntityPatriotRocket>)new RenderSnowball(manager, ItemInit.PATRIOT_ROCKET_ITEM, Minecraft.getMinecraft().getRenderItem());
             }
         });
     }

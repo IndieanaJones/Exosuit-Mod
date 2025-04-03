@@ -21,8 +21,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraft.entity.projectile.EntityLargeFireball;
-import net.minecraft.entity.projectile.EntityTippedArrow;
 import net.minecraft.init.SoundEvents;
 
 public class EntityPatriotExosuit extends AbstractExosuit
@@ -91,7 +89,7 @@ public class EntityPatriotExosuit extends AbstractExosuit
                 if(this.minigunRotation >= 100 && this.ticksUntilNextMinigunBullet <= 0)
                 {
                     shootMinigunProjectile();
-                    ticksUntilNextMinigunBullet = 4;
+                    ticksUntilNextMinigunBullet = 2;
                 }
             }
         }
@@ -171,10 +169,7 @@ public class EntityPatriotExosuit extends AbstractExosuit
 
     public void shootMinigunProjectile()
     {
-        EntityTippedArrow arrow = new EntityTippedArrow(this.world, this);
         Vec3d vec3d = this.getLook(1.0F);
-
-        double d3 = vec3d.y;
 
         double xOffset = -2;
         Vec3d entityPosition = this.getPositionEyes(1.0F);
@@ -191,12 +186,21 @@ public class EntityPatriotExosuit extends AbstractExosuit
 
         Vec3d firePosition = entityPosition.add(new Vec3d(offsetX, offsetY, offsetZ));
 
+        final double d1 = 32.0;
+        final double d2 = vec3d.x * d1;
+        final double d3 = vec3d.y * d1;
+        final double d4 = vec3d.z * d1;
         Vec3d crosshairPosition = this.getCrosshairTargetPosition(world);
         Vec3d direction = crosshairPosition.subtract(firePosition).normalize();
+        final EntityPatriotBullet fireball = new EntityPatriotBullet(this.world, this, d2, d3, d4);
+        fireball.motionX = direction.x * 3 + this.rand.nextGaussian() * 0.007499999832361937D * (double)15;
+        fireball.motionY = direction.y * 3 + this.rand.nextGaussian() * 0.007499999832361937D * (double)15;
+        fireball.motionZ = direction.z * 3 + this.rand.nextGaussian() * 0.007499999832361937D * (double)15;
+        fireball.posX = firePosition.x;
+        fireball.posY = firePosition.y;
+        fireball.posZ = firePosition.z;
+        this.world.spawnEntity((Entity)fireball);
 
-        arrow.setPosition(firePosition.x, firePosition.y + (d3), firePosition.z);
-        arrow.shoot(direction.x, direction.y, direction.z, (float) 5.0F, 3F);
-        this.world.spawnEntity(arrow);
         this.world.playSound((EntityPlayer) null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_SKELETON_SHOOT, this.getSoundCategory(), 1.0F, 1.0F + (this.getRNG().nextFloat() - this.getRNG().nextFloat()) * 0.2F);
     }
 
@@ -225,11 +229,10 @@ public class EntityPatriotExosuit extends AbstractExosuit
         final double d4 = vec3d.z * d1;
         Vec3d crosshairPosition = this.getCrosshairTargetPosition(world);
         Vec3d direction = crosshairPosition.subtract(firePosition).normalize();
-        final EntityLargeFireball fireball = new EntityLargeFireball(this.world, this, d2, d3, d4);
+        final EntityPatriotRocket fireball = new EntityPatriotRocket(this.world, this, d2, d3, d4);
         fireball.motionX = direction.x * 3;
         fireball.motionY = direction.y * 3;
         fireball.motionZ = direction.z * 3;
-        fireball.explosionPower = 4;
         fireball.posX = firePosition.x;
         fireball.posY = firePosition.y;
         fireball.posZ = firePosition.z;
