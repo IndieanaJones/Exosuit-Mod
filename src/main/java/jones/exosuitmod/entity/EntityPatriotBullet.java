@@ -73,7 +73,7 @@ public class EntityPatriotBullet extends EntityFireball
         {
             if (result.entityHit != null)
             {
-                result.entityHit.attackEntityFrom(DamageSource.causeFireballDamage(this, this.shootingEntity), 6.0F);
+                result.entityHit.attackEntityFrom(DamageSource.causeFireballDamage(this, this.shootingEntity), 4.0F);
                 this.applyEnchantments(this.shootingEntity, result.entityHit);
             }
 

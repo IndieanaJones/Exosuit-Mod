@@ -5,6 +5,7 @@ import javax.annotation.Nullable;
 import jones.exosuitmod.inventory.ExosuitInventory;
 import jones.exosuitmod.network.PacketInit;
 import jones.exosuitmod.network.packets.PacketSendExosuitCooldown;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
@@ -25,6 +26,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -64,6 +66,16 @@ public class AbstractExosuit extends EntityCreature implements IInventoryChanged
     {
         super.applyEntityAttributes();
         this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
+    }
+
+    @Override
+    public boolean isInvisible()
+    {
+        if(FMLCommonHandler.instance().getSide() != Side.CLIENT || !this.isBeingRidden() || this.getControllingPassenger() != Minecraft.getMinecraft().player)
+            return super.isInvisible();
+        if(Minecraft.getMinecraft().gameSettings.thirdPersonView == 0)
+            return true;
+        return super.isInvisible();
     }
 
     public void onLeftClickPressed(boolean pressed)
@@ -294,7 +306,8 @@ public class AbstractExosuit extends EntityCreature implements IInventoryChanged
             this.prevRotationYaw = this.rotationYaw;
             this.rotationPitch = entitylivingbase.rotationPitch;
             this.setRotation(this.rotationYaw, this.rotationPitch);
-            this.rotationYawHead = this.rotationYaw;
+            this.renderYawOffset = this.rotationYaw;
+            this.rotationYawHead = this.renderYawOffset;
             strafe = entitylivingbase.moveStrafing;
             forward = entitylivingbase.moveForward;
 
@@ -351,7 +364,7 @@ public class AbstractExosuit extends EntityCreature implements IInventoryChanged
                 this.jumpMovementFactor = this.getAIMoveSpeed() * 0.2F;
                 super.travel(strafe, vertical, forward);
             }
-            else if (entitylivingbase instanceof EntityPlayer && lastTimeHitCountdown > 0)
+            else if (entitylivingbase instanceof EntityPlayer)
             {
                 this.motionX = 0.0D;
                 this.motionY = 0.0D;

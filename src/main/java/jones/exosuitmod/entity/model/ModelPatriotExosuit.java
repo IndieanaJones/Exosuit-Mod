@@ -133,7 +133,6 @@ public class ModelPatriotExosuit extends ModelBase
     public void setRotationAngles(final float limbSwing, final float limbSwingAmount, final float ageInTicks, final float netHeadYaw, final float headPitch, final float scaleFactor, final Entity entityIn) 
 	{
         final EntityPatriotExosuit exosuit = (EntityPatriotExosuit)entityIn;
-		this.head.rotateAngleY = netHeadYaw * 0.017453292F;
 		this.LeftLeg.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
 		this.RightLeg.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * -limbSwingAmount;
 		this.Minigun.rotateAngleX = headPitch * 0.017453292F;

@@ -74,11 +74,11 @@ public class EntityPatriotRocket extends EntityFireball
         {
             if (result.entityHit != null)
             {
-                result.entityHit.attackEntityFrom(DamageSource.causeFireballDamage(this, this.shootingEntity), 10.0F);
+                result.entityHit.attackEntityFrom(DamageSource.causeFireballDamage(this, this.shootingEntity), 8.0F);
                 this.applyEnchantments(this.shootingEntity, result.entityHit);
             }
 
-            this.world.newExplosion((Entity)null, this.posX, this.posY, this.posZ, 4, false, true);
+            this.world.newExplosion((Entity)null, this.posX, this.posY, this.posZ, 3.5F, false, true);
             this.setDead();
         }
     }

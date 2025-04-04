@@ -50,10 +50,15 @@ public class EntityPatriotExosuit extends AbstractExosuit
     {
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(100.0D);
-        this.getEntityAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(20.0D);
-        this.getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).setBaseValue(10.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(12.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).setBaseValue(6.0D);
         this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.1D);
         this.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(1.0D);
+    }
+
+    public boolean shouldRender()
+    {
+        return isMountJumping;
     }
 
     public void onLeftClickPressed(boolean pressed)
