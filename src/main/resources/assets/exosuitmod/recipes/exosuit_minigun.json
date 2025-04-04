@@ -1,0 +1,29 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+        "bxb",
+        "xax",
+        "bxb"
+    ],
+    "key":
+    {
+        "x":
+        {
+            "item": "minecraft:dispenser"
+        },
+        "a":
+        {
+            "item": "minecraft:iron_block"
+        },
+        "b":
+        {
+            "item": "minecraft:redstone"
+        }
+    },
+    "result":
+    {
+        "item": "exosuitmod:exosuit_minigun",
+        "count": 1
+    }
+}

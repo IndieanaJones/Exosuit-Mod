@@ -1,0 +1,37 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+        "xba",
+        " c ",
+        "d d"
+    ],
+    "key":
+    {
+        "x":
+        {
+            "item": "exosuitmod:exosuit_minigun"
+        },
+        "a":
+        {
+            "item": "exosuitmod:exosuit_rocket_launcher"
+        },
+        "b":
+        {
+            "item": "exosuitmod:large_exosuit_body"
+        },
+        "c":
+        {
+            "item": "exosuitmod:large_rotating_core"
+        },
+        "d":
+        {
+            "item": "exosuitmod:large_hydraulic_leg"
+        }
+    },
+    "result":
+    {
+        "item": "exosuitmod:patriot_exosuit",
+        "count": 1
+    }
+}

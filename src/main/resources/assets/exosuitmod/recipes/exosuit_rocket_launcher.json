@@ -1,0 +1,25 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+        "aaa",
+        "axx",
+        "axx"
+    ],
+    "key":
+    {
+        "x":
+        {
+            "item": "minecraft:dispenser"
+        },
+        "a":
+        {
+            "item": "minecraft:tnt"
+        }
+    },
+    "result":
+    {
+        "item": "exosuitmod:exosuit_rocket_launcher",
+        "count": 1
+    }
+}

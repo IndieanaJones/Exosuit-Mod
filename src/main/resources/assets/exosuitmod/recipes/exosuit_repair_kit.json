@@ -1,0 +1,29 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+        "xxx",
+        "bab",
+        "bbb"
+    ],
+    "key":
+    {
+        "x":
+        {
+            "item": "minecraft:redstone"
+        },
+        "a":
+        {
+            "item": "minecraft:iron_block"
+        },
+        "b":
+        {
+            "item": "minecraft:iron_ingot"
+        }
+    },
+    "result":
+    {
+        "item": "exosuitmod:exosuit_repair_kit",
+        "count": 1
+    }
+}

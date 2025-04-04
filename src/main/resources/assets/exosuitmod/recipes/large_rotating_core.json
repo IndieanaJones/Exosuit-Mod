@@ -1,0 +1,29 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+        "bab",
+        "axa",
+        "bab"
+    ],
+    "key":
+    {
+        "x":
+        {
+            "item": "minecraft:piston"
+        },
+        "a":
+        {
+            "item": "minecraft:iron_block"
+        },
+        "b":
+        {
+            "item": "minecraft:iron_ingot"
+        }
+    },
+    "result":
+    {
+        "item": "exosuitmod:large_rotating_core",
+        "count": 1
+    }
+}

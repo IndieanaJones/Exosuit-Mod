@@ -1,0 +1,25 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+        "a a",
+        "axa",
+        "aaa"
+    ],
+    "key":
+    {
+        "x":
+        {
+            "item": "minecraft:redstone_block"
+        },
+        "a":
+        {
+            "item": "minecraft:iron_block"
+        }
+    },
+    "result":
+    {
+        "item": "exosuitmod:large_exosuit_body",
+        "count": 1
+    }
+}

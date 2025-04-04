@@ -1,0 +1,33 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+        "cac",
+        "bxb",
+        "ccc"
+    ],
+    "key":
+    {
+        "x":
+        {
+            "item": "minecraft:water_bucket"
+        },
+        "a":
+        {
+            "item": "minecraft:redstone_block"
+        },
+        "b":
+        {
+            "item": "minecraft:piston"
+        },
+        "c":
+        {
+            "item": "minecraft:iron_block"
+        }
+    },
+    "result":
+    {
+        "item": "exosuitmod:large_hydraulic_leg",
+        "count": 1
+    }
+}

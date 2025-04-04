@@ -16,6 +16,14 @@ public class ItemInit
 {
     public static final List<Item> ITEMS = new ArrayList<Item>();
 
+    public static final ExosuitModSpawnItem PATRIOT_EXOSUIT_ITEM = new ExosuitModSpawnItem("patriot_exosuit", "A Patriot Exosuit, equipped with minigun and rocket launcher.");
+
+    public static final ExosuitModItemBase EXOSUIT_MINIGUN = new ExosuitModItemBase("exosuit_minigun", "A component for crafting exosuits.");
+    public static final ExosuitModItemBase EXOSUIT_ROCKET_LAUNCHER = new ExosuitModItemBase("exosuit_rocket_launcher", "A component for crafting exosuits.");
+    public static final ExosuitModItemBase LARGE_EXOSUIT_BODY = new ExosuitModItemBase("large_exosuit_body", "A component for crafting exosuits.");
+    public static final ExosuitModItemBase LARGE_HYDRAULIC_LEG = new ExosuitModItemBase("large_hydraulic_leg", "A component for crafting exosuits.");
+    public static final ExosuitModItemBase LARGE_ROTATING_CORE = new ExosuitModItemBase("large_rotating_core", "A component for crafting exosuits.");
+
     public static final ExosuitModItemBase EXOSUIT_REPAIR_KIT = new ExosuitModItemBase("exosuit_repair_kit", "A repair kit for larger exosuits. Heals 10 hearts.\nConsumed on use.", 16);
 
     public static final ExosuitModItemBase EXOSUIT_EGG_UPGRADE_MK1 = new ExosuitModItemBase("exosuit_egg_upgrade_mk1", "An upgrade for the Messager Chicken.\nAllows eggs to be thrown as opposed to be laid, as well as greatly decreasing the cooldown.");
