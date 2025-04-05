@@ -5,6 +5,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -27,22 +28,29 @@ public class ExosuitModSpawnItem extends ExosuitModItemBase
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) 
+    public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {
         ItemStack itemStack = player.getHeldItem(hand);
-        BlockPos targetPos = player.rayTrace(6, 1.0F).getBlockPos();
 
-        if (!world.isRemote) 
+        if (worldIn.isRemote)
+        {
+            return EnumActionResult.SUCCESS;
+        }
+        else if (!player.canPlayerEdit(pos.offset(facing), facing, itemStack))
+        {
+            return EnumActionResult.FAIL;
+        }
+        else 
         {
             // Replace this with the desired entity type (e.g., a Cow)
-            EntityPatriotExosuit entity = new EntityPatriotExosuit(world);
+            EntityPatriotExosuit entity = new EntityPatriotExosuit(worldIn);
 
-            entity.setPosition(targetPos.getX(), targetPos.getY() + 1, targetPos.getZ());
-            world.spawnEntity(entity);
+            entity.setPosition(pos.getX(), pos.getY() + 1, pos.getZ());
+            worldIn.spawnEntity(entity);
             itemStack.shrink(1);
         }
 
         // Return the item stack to indicate usage (it doesn't get consumed here)
-        return new ActionResult<ItemStack>(EnumActionResult.PASS, player.getHeldItem(hand));
+        return EnumActionResult.SUCCESS;
     }
 }
