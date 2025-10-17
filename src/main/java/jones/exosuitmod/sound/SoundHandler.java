@@ -12,6 +12,7 @@ public class SoundHandler
     public static SoundEvent EXOSUIT_STEP;
     public static SoundEvent EXOSUIT_HURT;
     public static SoundEvent EXOSUIT_REPAIR;
+    public static SoundEvent EXOSUIT_MINIGUN_FIRE;
     
     @SubscribeEvent
     public static void registerSounds(RegistryEvent.Register<SoundEvent> event)
@@ -19,6 +20,7 @@ public class SoundHandler
         EXOSUIT_STEP = registerSound("entity.exosuit.step", event);
         EXOSUIT_HURT = registerSound("entity.exosuit.hurt", event);
         EXOSUIT_REPAIR = registerSound("entity.exosuit.repair", event);
+        EXOSUIT_MINIGUN_FIRE = registerSound("entity.exosuit.minigun_fire", event);
     }
 
     public static SoundEvent registerSound(String soundName, RegistryEvent.Register<SoundEvent> event)

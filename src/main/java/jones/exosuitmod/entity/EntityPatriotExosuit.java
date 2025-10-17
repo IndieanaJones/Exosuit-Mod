@@ -25,6 +25,7 @@ import net.minecraft.init.SoundEvents;
 
 public class EntityPatriotExosuit extends AbstractExosuit
 {
+    public float currentMinigunModelRotation = 0;
     public float minigunRotation = 0;
     private static final DataParameter<Boolean> MINIGUN_SPINNING = EntityDataManager.<Boolean>createKey(EntityPatriotExosuit.class, DataSerializers.BOOLEAN);
     public int ticksUntilNextMinigunBullet = 0;
@@ -35,7 +36,7 @@ public class EntityPatriotExosuit extends AbstractExosuit
         this.setSize(2F, 4.5F);
         this.stepHeight = 1;
         this.limbSwing = 1;
-        this.ignoreFrustumCheck = true;
+        this.strafeMultiplier = 0.8F;
     }
 
     public void entityInit()
@@ -206,7 +207,7 @@ public class EntityPatriotExosuit extends AbstractExosuit
         fireball.posZ = firePosition.z;
         this.world.spawnEntity((Entity)fireball);
 
-        this.world.playSound((EntityPlayer) null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_SKELETON_SHOOT, this.getSoundCategory(), 1.0F, 1.0F + (this.getRNG().nextFloat() - this.getRNG().nextFloat()) * 0.2F);
+        this.world.playSound((EntityPlayer) null, this.posX, this.posY, this.posZ, SoundHandler.EXOSUIT_MINIGUN_FIRE, this.getSoundCategory(), 0.25F, 1.0F + (this.getRNG().nextFloat() - this.getRNG().nextFloat()) * 0.2F);
     }
 
     public void shootRocketLauncherProjectile()

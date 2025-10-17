@@ -13,6 +13,11 @@ item.large_exosuit_body.name=Large Exosuit Body
 item.large_hydraulic_leg.name=Large Hydraulic Leg
 item.large_rotating_core.name=Large Rotating Core
 
+subtitles.entity.exosuit.step=Exosuit Walking
+subtitles.entity.exosuit.hurt=Exosuit Hurt
+subtitles.entity.exosuit.repair=Exosuit Repairing
+subtitles.entity.exosuit.minigun_fire=Exosuit Minigun Shoots
+
 item.exosuit_repair_kit.name=Exosuit Repair Kit
 
 item.exosuit_egg_upgrade_mk1.name=Messager Chicken Upgrade: Egg Thrower Mk1

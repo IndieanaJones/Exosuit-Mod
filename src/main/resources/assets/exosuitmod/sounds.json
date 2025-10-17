@@ -2,14 +2,14 @@
     "entity.exosuit.hurt":
     {
         "category": "entity",
-        "subtitle": "entity.exosuit.hurt",
+        "subtitle": "subtitles.entity.exosuit.hurt",
         "sounds": [{ "name": "exosuitmod:entity/exosuit/damage1", "stream": true }]
     },
 
     "entity.exosuit.step":
     {
         "category": "entity",
-        "subtitle": "entity.exosuit.step",
+        "subtitle": "subtitles.entity.exosuit.step",
         "sounds": [{ "name": "exosuitmod:entity/exosuit/step1", "stream": true },
         { "name": "exosuitmod:entity/exosuit/step2", "stream": true },
         { "name": "exosuitmod:entity/exosuit/step3", "stream": true },
@@ -19,7 +19,14 @@
     "entity.exosuit.repair":
     {
         "category": "entity",
-        "subtitle": "entity.exosuit.repair",
+        "subtitle": "subtitles.entity.exosuit.repair",
         "sounds": [{ "name": "exosuitmod:entity/exosuit/repair", "stream": true }]
+    },
+
+    "entity.exosuit.minigun_fire":
+    {
+        "category": "entity",
+        "subtitle": "subtitles.entity.exosuit.minigun_fire",
+        "sounds": [{ "name": "exosuitmod:entity/exosuit/patriot_fire", "stream": true }]
     }
 }

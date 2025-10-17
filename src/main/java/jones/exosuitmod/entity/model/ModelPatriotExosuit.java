@@ -138,7 +138,8 @@ public class ModelPatriotExosuit extends ModelBase
 		this.Minigun.rotateAngleX = headPitch * 0.017453292F;
 		this.RocketLauncher.rotateAngleX = headPitch * 0.017453292F;
 
-		float minigunRotationSpeed = exosuit.minigunRotation;
-		this.Barrel.rotateAngleZ += minigunRotationSpeed * 0.004F;
+		exosuit.currentMinigunModelRotation += exosuit.minigunRotation * 0.5F;
+		exosuit.currentMinigunModelRotation = exosuit.currentMinigunModelRotation % 360;
+		this.Barrel.rotateAngleZ = exosuit.currentMinigunModelRotation * 0.017453292F;
 	}
 }
