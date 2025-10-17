@@ -47,6 +47,8 @@ public class AbstractExosuit extends EntityCreature implements IInventoryChanged
     public boolean isMountJumping = false;
     public int lastTimeHitCountdown = 0;
 
+    public float strafeMultiplier = 1;
+
     public ExosuitInventory inventory;
 
     public AbstractExosuit(World worldIn) 
@@ -308,8 +310,13 @@ public class AbstractExosuit extends EntityCreature implements IInventoryChanged
             this.setRotation(this.rotationYaw, this.rotationPitch);
             this.renderYawOffset = this.rotationYaw;
             this.rotationYawHead = this.renderYawOffset;
-            strafe = entitylivingbase.moveStrafing;
+            strafe = entitylivingbase.moveStrafing * strafeMultiplier;
             forward = entitylivingbase.moveForward;
+
+            if (forward <= 0.0F)
+            {
+                forward *= strafeMultiplier;
+            }
 
             if (this.jumpPower > 0.0F && !this.isMountJumping && this.onGround)
             {
