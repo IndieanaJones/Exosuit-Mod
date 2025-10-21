@@ -9,18 +9,18 @@ import net.minecraft.util.math.MathHelper;
 
 public class ModelPatriotExosuit extends ModelBase 
 {
-	private final ModelRenderer body;
-	private final ModelRenderer head;
-	private final ModelRenderer RightLeg;
-	private final ModelRenderer cube_r1;
-	private final ModelRenderer cube_r2;
-	private final ModelRenderer LeftLeg;
-	private final ModelRenderer cube_r3;
-	private final ModelRenderer cube_r4;
-	private final ModelRenderer RocketLauncher;
-	private final ModelRenderer RocketSpot;
-	private final ModelRenderer Minigun;
-	private final ModelRenderer Barrel;
+	public final ModelRenderer body;
+	public final ModelRenderer head;
+	public final ModelRenderer RightLeg;
+	public final ModelRenderer cube_r1;
+	public final ModelRenderer cube_r2;
+	public final ModelRenderer LeftLeg;
+	public final ModelRenderer cube_r3;
+	public final ModelRenderer cube_r4;
+	public final ModelRenderer RocketLauncher;
+	public final ModelRenderer RocketSpot;
+	public final ModelRenderer Minigun;
+	public final ModelRenderer Barrel;
 
 	public ModelPatriotExosuit() 
 	{

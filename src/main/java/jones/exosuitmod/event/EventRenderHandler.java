@@ -57,6 +57,11 @@ public class EventRenderHandler
         if (!player.isRiding() || !(player.getRidingEntity() instanceof AbstractExosuit))
             return;
         event.setCanceled(true);
+        if(Minecraft.getMinecraft().gameSettings.thirdPersonView == 0)
+        {
+            AbstractExosuit exosuit = (AbstractExosuit)player.getRidingEntity();
+            exosuit.renderMobHands(event.getPartialTicks());
+        }
     }
 
     //Render custom exosuit health bar
@@ -75,7 +80,7 @@ public class EventRenderHandler
         {
             event.setCanceled(true);
         }
-        else if(event.getType() == ElementType.ALL)
+        else if(event.getType() == ElementType.HOTBAR)
         {
             ExosuitHealthbarOverlay.INSTANCE.renderHUD(event.getResolution(), player);
             ExosuitCooldownOverlay.INSTANCE.renderHUD(event.getResolution(), player);

@@ -2,6 +2,7 @@ package jones.exosuitmod.entity;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.MultiPartEntityPart;
 import net.minecraft.entity.projectile.EntityFireball;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.MathHelper;
@@ -74,8 +75,15 @@ public class EntityPatriotRocket extends EntityFireball
         {
             if (result.entityHit != null)
             {
-                result.entityHit.attackEntityFrom(DamageSource.causeFireballDamage(this, this.shootingEntity), 8.0F);
-                this.applyEnchantments(this.shootingEntity, result.entityHit);
+                Entity target = result.entityHit;
+                if (target instanceof MultiPartEntityPart) 
+                {
+                    MultiPartEntityPart part = (MultiPartEntityPart) target;
+                    if (part.parent != null && part.parent instanceof Entity)
+                        target = (Entity) part.parent;
+                }
+                target.attackEntityFrom(DamageSource.causeThrownDamage(this, this.shootingEntity), 4.0F);
+                this.applyEnchantments(this.shootingEntity, target);
             }
 
             this.world.newExplosion((Entity)null, this.posX, this.posY, this.posZ, 3.5F, false, true);

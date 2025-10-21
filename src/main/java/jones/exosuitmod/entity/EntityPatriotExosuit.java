@@ -1,10 +1,23 @@
 package jones.exosuitmod.entity;
 
+import java.util.List;
+
 import jones.exosuitmod.ExosuitMod;
+import jones.exosuitmod.entity.model.ModelPatriotExosuit;
+import jones.exosuitmod.entity.render.AdvancedEntityTextureHandler;
 import jones.exosuitmod.item.ItemInit;
 import jones.exosuitmod.sound.SoundHandler;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.RenderLivingBase;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.IProjectile;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.datasync.DataParameter;
@@ -15,6 +28,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
@@ -36,7 +50,7 @@ public class EntityPatriotExosuit extends AbstractExosuit
         this.setSize(2F, 4.5F);
         this.stepHeight = 1;
         this.limbSwing = 1;
-        this.strafeMultiplier = 0.8F;
+        this.strafeMultiplier = 0.9F;
     }
 
     public void entityInit()
@@ -50,7 +64,7 @@ public class EntityPatriotExosuit extends AbstractExosuit
     public void applyEntityAttributes()
     {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(100.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(80.0D);
         this.getEntityAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(12.0D);
         this.getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).setBaseValue(6.0D);
         this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.1D);
@@ -72,6 +86,63 @@ public class EntityPatriotExosuit extends AbstractExosuit
             updateCooldown("left", this.getMaxLeftClickCooldown(), true);
         }
         leftClickPressed = pressed;
+    }
+
+    public void renderMobHands(float partialTicks)
+    {
+        if(!this.world.isRemote)
+            return;
+        RenderManager rm = Minecraft.getMinecraft().getRenderManager();
+        Render<?> render = rm.getEntityRenderObject(this);
+        RenderLivingBase<?> mobRenderer = (RenderLivingBase<?>) render;
+        
+        ModelBase model = mobRenderer.getMainModel();
+        if (!(model instanceof ModelPatriotExosuit)) return;
+        ModelPatriotExosuit myModel = (ModelPatriotExosuit) model;
+
+        GlStateManager.pushMatrix();
+
+        // Enable vanilla-like lighting
+        GlStateManager.enableRescaleNormal();
+        RenderHelper.enableStandardItemLighting();
+
+        Minecraft.getMinecraft().getTextureManager().bindTexture(AdvancedEntityTextureHandler.INSTANCE.getTextureLocation(this));
+
+        GlStateManager.disableCull();
+        GlStateManager.enableBlend();
+        GlStateManager.color(1F, 1F, 1F, 1F);
+
+        myModel.Minigun.rotateAngleX = 0;
+		myModel.RocketLauncher.rotateAngleX = 0;
+
+        // You may want to interpolate animations based on partialTicks
+        myModel.Barrel.rotateAngleZ = this.currentMinigunModelRotation * 0.017453292F;
+
+        // --- Transform and render ROCKET LAUNCHER ---
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(-0.6F, -1.8F, -1.6F); // adjust position
+        GlStateManager.rotate(180F, 0F, 0F, 1F);
+        GlStateManager.scale(0.9F, 0.9F, 0.9F);
+        myModel.RocketLauncher.render(0.0625F);
+        GlStateManager.popMatrix();
+
+        // --- Transform and render MINIGUN ---
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(0.6F, -1.5F, -1.6F);
+        GlStateManager.rotate(180F, 0F, 0F, 1F);
+        GlStateManager.scale(0.9F, 0.9F, 0.9F);
+        myModel.Minigun.render(0.0625F);
+        GlStateManager.popMatrix();
+
+        GlStateManager.disableBlend();
+        GlStateManager.enableCull();
+
+
+        // Disable lighting after
+        RenderHelper.disableStandardItemLighting();
+        GlStateManager.disableRescaleNormal();
+
+        GlStateManager.popMatrix();
     }
 
     public float getEyeHeight()
@@ -259,6 +330,46 @@ public class EntityPatriotExosuit extends AbstractExosuit
         {
             targetPos = new Vec3d(rayTraceResult.hitVec.x, rayTraceResult.hitVec.y, rayTraceResult.hitVec.z);
         }
+
+        // Expand the search AABB to include entities along the ray path
+        AxisAlignedBB searchBox = this.getEntityBoundingBox().expand(lookDirection.x * maxDistance, lookDirection.y * maxDistance, lookDirection.z * maxDistance)
+            .grow(1.0D, 1.0D, 1.0D); // small buffer
+
+        List<Entity> candidates = world.getEntitiesWithinAABBExcludingEntity(this, searchBox);
+
+        Entity closestEntity = null;
+        Vec3d hitVec = null;
+
+        double blockDist = targetPos != null ? cameraPos.distanceTo(targetPos) : maxDistance;
+        double closestDist = blockDist; // don't consider entities beyond the block hit
+
+        for (Entity entity : candidates) 
+        {
+            if (entity == null || entity == this || entity.isRidingOrBeingRiddenBy(this) || !(entity instanceof EntityLivingBase) || entity instanceof IProjectile) continue;
+            if (!entity.canBeCollidedWith()) continue;
+
+            // grow by collision border size
+            AxisAlignedBB entityBB = entity.getEntityBoundingBox().grow(entity.getCollisionBorderSize());
+
+            RayTraceResult intercept = entityBB.calculateIntercept(cameraPos, targetPos);
+            if (intercept != null) {
+                double distToHit = cameraPos.distanceTo(intercept.hitVec);
+                if (distToHit < closestDist) 
+                {
+                    closestEntity = entity;
+                    hitVec = intercept.hitVec;
+                    closestDist = distToHit;
+                }
+            }
+        }
+
+        if (closestEntity != null) 
+        {
+            // Return a RayTraceResult representing the entity hit.
+            RayTraceResult result = new RayTraceResult(closestEntity, hitVec);
+            return new Vec3d(result.hitVec.x, result.hitVec.y, result.hitVec.z);
+        }
+
         return targetPos;
     }
 

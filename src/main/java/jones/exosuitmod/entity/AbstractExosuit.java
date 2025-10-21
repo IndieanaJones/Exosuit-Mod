@@ -236,6 +236,11 @@ public class AbstractExosuit extends EntityCreature implements IInventoryChanged
 
     }
 
+    public void renderMobHands(float partialTicks)
+    {
+        
+    }
+
     public boolean attackEntityFrom(DamageSource source, float amount)
     {
         Entity entity = source.getTrueSource();
