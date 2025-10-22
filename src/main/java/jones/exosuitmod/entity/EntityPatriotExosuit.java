@@ -242,6 +242,35 @@ public class EntityPatriotExosuit extends AbstractExosuit
         this.limbSwing -= this.limbSwingAmount;
         this.limbSwingAmount = this.limbSwingAmount * 0.75F;
         this.limbSwing += this.limbSwingAmount;
+
+        // Every few ticks to reduce lag
+        if (this.ticksExisted % 5 == 0) 
+        {
+            EntityLivingBase rider = (EntityLivingBase)getControllingPassenger();
+            if (rider != null && !this.world.isRemote && this.onGround && Math.abs(rider.moveForward) + Math.abs(rider.moveStrafing) > 0) 
+            {
+                stompNearbyEntities();
+            }
+        }
+    }
+
+    public void stompNearbyEntities()
+    {
+        double radius = 0.1D;
+
+        if(!this.isBeingRidden())
+            return;
+
+        // Get nearby entities (excluding itself)
+        List<EntityLivingBase> entities = this.world.getEntitiesWithinAABB(EntityLivingBase.class,
+                this.getEntityBoundingBox().grow(radius, 0, radius),
+                e -> e != this && e.isEntityAlive() && !this.isOnSameTeam(e) && !e.isRidingOrBeingRiddenBy(this));
+
+        for (EntityLivingBase entity : entities) 
+        {
+            // Apply damage
+            entity.attackEntityFrom(DamageSource.causeMobDamage(this), 4.0F);
+        }
     }
 
     public void shootMinigunProjectile()

@@ -72,14 +72,10 @@ public class EventRenderHandler
         EntityPlayer player = Minecraft.getMinecraft().player;
         if (!player.isRiding() || !(player.getRidingEntity() instanceof AbstractExosuit))
         return;
-		if(event.getType() == ElementType.HEALTHMOUNT)
+		if(event.getType() == ElementType.HEALTHMOUNT || event.getType() == ElementType.HEALTH || event.getType() == ElementType.AIR)
 		{
             event.setCanceled(true);
 		}
-        else if(event.getType() == ElementType.HEALTH)
-        {
-            event.setCanceled(true);
-        }
         else if(event.getType() == ElementType.HOTBAR)
         {
             ExosuitHealthbarOverlay.INSTANCE.renderHUD(event.getResolution(), player);
