@@ -7,6 +7,8 @@ key.exosuitmod.category=Indie's Exosuits
 
 item.patriot_exosuit.name=Patriot Exosuit
 
+tile.mechanical_scrap_block.name=Mechanical Scrap Block
+
 item.exosuit_minigun.name=Exosuit Minigun
 item.exosuit_rocket_launcher.name=Exosuit Rocket Launcher
 item.large_exosuit_body.name=Large Exosuit Body
