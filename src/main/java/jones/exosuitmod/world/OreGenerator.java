@@ -24,7 +24,7 @@ public class OreGenerator implements IWorldGenerator
     
     private void generateOverworld(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider)
     {
-        generateOreOverworld(BlockInit.MECHANICAL_SCRAP_BLOCK.getDefaultState(), world, random, chunkX * 16, chunkZ * 16, 0, 32, random.nextInt(5) + 1, 6);
+        generateOreOverworld(BlockInit.MECHANICAL_SCRAP_BLOCK.getDefaultState(), world, random, chunkX * 16, chunkZ * 16, 0, 32, random.nextInt(5) + 1, 5);
     }
     
     private void generateOreOverworld(IBlockState ore, World world, Random random, int x, int z, int minY, int maxY, int size, int chances) 
