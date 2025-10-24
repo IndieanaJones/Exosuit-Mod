@@ -1,0 +1,25 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+        " a ",
+        "axa",
+        " a "
+    ],
+    "key":
+    {
+        "x":
+        {
+            "item": "minecraft:golden_carrot"
+        },
+        "a":
+        {
+            "item": "exosuitmod:mechanical_scrap"
+        }
+    },
+    "result":
+    {
+        "item": "exosuitmod:exosuit_nightvision_upgrade",
+        "count": 1
+    }
+}

@@ -36,7 +36,10 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.init.Items;
+import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.ItemStack;
 
 public class EntityPatriotExosuit extends AbstractExosuit
 {
@@ -45,6 +48,10 @@ public class EntityPatriotExosuit extends AbstractExosuit
     private static final DataParameter<Boolean> MINIGUN_SPINNING = EntityDataManager.<Boolean>createKey(EntityPatriotExosuit.class, DataSerializers.BOOLEAN);
     public int ticksUntilNextMinigunBullet = 0;
 
+    public float oldNightVisionUpgradeStatus = 0;
+
+    private static final DataParameter<Integer> NIGHTVISION_UPGRADE_STATUS = EntityDataManager.<Integer>createKey(EntityPatriotExosuit.class, DataSerializers.VARINT);
+
     public EntityPatriotExosuit(World worldIn) 
     {
         super(worldIn);
@@ -52,7 +59,7 @@ public class EntityPatriotExosuit extends AbstractExosuit
         this.stepHeight = 1;
         this.limbSwing = 1;
         this.strafeMultiplier = 0.9F;
-        this.inventory = new ExosuitInventory(0);
+        this.inventory = new ExosuitInventory(1);
         this.inventory.addInventoryChangeListener(this);
     }
 
@@ -62,6 +69,7 @@ public class EntityPatriotExosuit extends AbstractExosuit
         this.setMaxLeftClickCooldown(200);
         this.setMaxRightClickCooldown(0);
         this.dataManager.register(MINIGUN_SPINNING, false);
+        this.dataManager.register(NIGHTVISION_UPGRADE_STATUS, Integer.valueOf(0));
     }
 
     public void applyEntityAttributes()
@@ -118,7 +126,6 @@ public class EntityPatriotExosuit extends AbstractExosuit
         myModel.Minigun.rotateAngleX = 0;
 		myModel.RocketLauncher.rotateAngleX = 0;
 
-        // You may want to interpolate animations based on partialTicks
         myModel.Barrel.rotateAngleZ = this.currentMinigunModelRotation * 0.017453292F;
 
         // --- Transform and render ROCKET LAUNCHER ---
@@ -146,6 +153,21 @@ public class EntityPatriotExosuit extends AbstractExosuit
         GlStateManager.disableRescaleNormal();
 
         GlStateManager.popMatrix();
+    }
+
+    public void updateExosuitCapabilities()
+    {
+        ItemStack nightVisionUpgradeSlot = inventory.getStackInSlot(0);
+
+        //Night vision
+        if(nightVisionUpgradeSlot.getItem() == Items.AIR)
+        {
+            this.setNightVisionUpgradeStatus(0);
+        }
+        else if(nightVisionUpgradeSlot.getItem() == ItemInit.EXOSUIT_NIGHTIVISON_UPGRADE)
+        {
+            this.setNightVisionUpgradeStatus(1);
+        }
     }
 
     public float getEyeHeight()
@@ -179,6 +201,18 @@ public class EntityPatriotExosuit extends AbstractExosuit
             {
                 ticksUntilNextMinigunBullet = 4;
             }
+        }
+
+        if(!this.world.isRemote && this.ticksExisted % 5 == 0 && this.getNightVisionUpgradeStatus() == 1 && this.getControllingPassenger() != null)
+        {
+            EntityLivingBase rider = (EntityLivingBase)getControllingPassenger();
+            rider.addPotionEffect(new PotionEffect(MobEffects.NIGHT_VISION, 300, 0, false, false));
+        }
+
+        if(this.world.isRemote && (this.oldNightVisionUpgradeStatus != this.getNightVisionUpgradeStatus()))
+        {
+            this.oldNightVisionUpgradeStatus = this.getNightVisionUpgradeStatus();
+            AdvancedEntityTextureHandler.INSTANCE.updateExosuitTexture(this);
         }
     }
 
@@ -272,7 +306,7 @@ public class EntityPatriotExosuit extends AbstractExosuit
         for (EntityLivingBase entity : entities) 
         {
             // Apply damage
-            entity.attackEntityFrom(DamageSource.causeMobDamage(this), 4.0F);
+            entity.attackEntityFrom(DamageSource.causeMobDamage(this), 6.0F);
         }
     }
 
@@ -422,7 +456,7 @@ public class EntityPatriotExosuit extends AbstractExosuit
 
     public int getTotalTextureLayers()
     {
-        return 1;
+        return 2;
     }
     
     @SideOnly(Side.CLIENT)
@@ -434,6 +468,20 @@ public class EntityPatriotExosuit extends AbstractExosuit
             {
                 return new ResourceLocation(ExosuitMod.MODID + ":textures/entity/patriot_exosuit/patriot_exosuit.png");
             }
+            case 1:
+            {
+                switch(this.getNightVisionUpgradeStatus())
+                {
+                    case 1:
+                    {
+                        return new ResourceLocation(ExosuitMod.MODID + ":textures/entity/patriot_exosuit/patriot_exosuit_nightvision.png");
+                    }
+                    default:
+                    {
+                        return null;
+                    }
+                }
+            }
         }
         return null;
     }
@@ -441,5 +489,15 @@ public class EntityPatriotExosuit extends AbstractExosuit
     public int getExtraThirdPersonZoom()
     {
         return 4;
+    }
+
+    public void setNightVisionUpgradeStatus(int value) 
+    {
+        this.dataManager.set(NIGHTVISION_UPGRADE_STATUS, Integer.valueOf(value));
+    }
+    
+    public int getNightVisionUpgradeStatus() 
+    {
+        return this.dataManager.get(NIGHTVISION_UPGRADE_STATUS).intValue();
     }
 }
