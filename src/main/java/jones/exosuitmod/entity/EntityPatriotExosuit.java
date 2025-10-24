@@ -5,6 +5,7 @@ import java.util.List;
 import jones.exosuitmod.ExosuitMod;
 import jones.exosuitmod.entity.model.ModelPatriotExosuit;
 import jones.exosuitmod.entity.render.AdvancedEntityTextureHandler;
+import jones.exosuitmod.inventory.ExosuitInventory;
 import jones.exosuitmod.item.ItemInit;
 import jones.exosuitmod.sound.SoundHandler;
 import net.minecraft.block.Block;
@@ -51,6 +52,8 @@ public class EntityPatriotExosuit extends AbstractExosuit
         this.stepHeight = 1;
         this.limbSwing = 1;
         this.strafeMultiplier = 0.9F;
+        this.inventory = new ExosuitInventory(0);
+        this.inventory.addInventoryChangeListener(this);
     }
 
     public void entityInit()

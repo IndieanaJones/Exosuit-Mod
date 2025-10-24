@@ -17,7 +17,6 @@ import net.minecraft.entity.projectile.EntityEgg;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -126,11 +125,6 @@ public class EntityMessagerChicken extends AbstractExosuit
             }
         }
         rightClickPressed = pressed;
-    }
-
-    public void openGUI(EntityPlayer playerEntity)
-    {
-        playerEntity.openGui(ExosuitMod.instance, 1, this.world, this.getEntityId(), 0, 0);
     }
 
     public void updateExosuitCapabilities()
@@ -280,30 +274,6 @@ public class EntityMessagerChicken extends AbstractExosuit
     public int getLegUpgradeStatus() 
     {
         return this.dataManager.get(LEG_UPGRADE_STATUS).intValue();
-    }
-
-    public void readEntityFromNBT(NBTTagCompound compound)
-    {
-        super.readEntityFromNBT(compound);
-        for(int i = 0; i < this.inventory.getSizeInventory(); i++)
-        {
-            if(!compound.hasKey("InventoryItem" + i))
-                continue;
-            ItemStack itemstack = new ItemStack(compound.getCompoundTag("InventoryItem" + i));
-            this.inventory.setInventorySlotContents(i, itemstack);
-        }
-        this.updateExosuitCapabilities();
-    }
-
-    public void writeEntityToNBT(NBTTagCompound compound)
-    {
-        super.writeEntityToNBT(compound);
-        for(int i = 0; i < this.inventory.getSizeInventory(); i++)
-        {
-            if(this.inventory.getStackInSlot(i).isEmpty())
-                continue;
-            compound.setTag("InventoryItem" + i, this.inventory.getStackInSlot(i).writeToNBT(new NBTTagCompound()));
-        }
     }
 
     public void fall(float distance, float damageMultiplier)

@@ -2,6 +2,7 @@ package jones.exosuitmod.entity;
 
 import javax.annotation.Nullable;
 
+import jones.exosuitmod.ExosuitMod;
 import jones.exosuitmod.inventory.ExosuitInventory;
 import jones.exosuitmod.network.PacketInit;
 import jones.exosuitmod.network.packets.PacketSendExosuitCooldown;
@@ -16,6 +17,7 @@ import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.IInventoryChangedListener;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -128,6 +130,18 @@ public class AbstractExosuit extends EntityCreature implements IInventoryChanged
         {
             this.rightClickCooldown = compound.getInteger("RightClickCooldown");
         }
+
+        if (this.inventory == null)
+            return;
+
+        for(int i = 0; i < this.inventory.getSizeInventory(); i++)
+        {
+            if(!compound.hasKey("InventoryItem" + i))
+                continue;
+            ItemStack itemstack = new ItemStack(compound.getCompoundTag("InventoryItem" + i));
+            this.inventory.setInventorySlotContents(i, itemstack);
+        }
+        this.updateExosuitCapabilities();
     }
 
     public void writeEntityToNBT(NBTTagCompound compound)
@@ -135,6 +149,16 @@ public class AbstractExosuit extends EntityCreature implements IInventoryChanged
         super.writeEntityToNBT(compound);
         compound.setInteger("LeftClickCooldown", this.leftClickCooldown);
         compound.setInteger("RightClickCooldown", this.rightClickCooldown);
+
+        if (this.inventory == null)
+            return;
+
+        for(int i = 0; i < this.inventory.getSizeInventory(); i++)
+        {
+            if(this.inventory.getStackInSlot(i).isEmpty())
+                continue;
+            compound.setTag("InventoryItem" + i, this.inventory.getStackInSlot(i).writeToNBT(new NBTTagCompound()));
+        }
     }
 
     public void onLivingUpdate()
@@ -214,6 +238,8 @@ public class AbstractExosuit extends EntityCreature implements IInventoryChanged
 
     public void openGUI(EntityPlayer playerEntity)
     {
+        if(this.inventory != null)
+            playerEntity.openGui(ExosuitMod.instance, 1, this.world, this.getEntityId(), 0, 0);
     }
 
     public void onInventoryChanged(IInventory basicInv) 

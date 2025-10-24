@@ -1,8 +1,11 @@
 package jones.exosuitmod.event;
 
 import jones.exosuitmod.client.gui.container.GuiMessagerChickenInventory;
+import jones.exosuitmod.client.gui.container.GuiPatriotExosuitInventory;
 import jones.exosuitmod.entity.EntityMessagerChicken;
+import jones.exosuitmod.entity.EntityPatriotExosuit;
 import jones.exosuitmod.inventory.container.ContainerMessagerChickenInventory;
+import jones.exosuitmod.inventory.container.ContainerPatriotExosuitInventory;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
@@ -19,6 +22,10 @@ public class GuiHandler implements IGuiHandler
             {
                 return new ContainerMessagerChickenInventory(player, (EntityMessagerChicken)entity);
             }
+            if (entity instanceof EntityPatriotExosuit) 
+            {
+                return new ContainerPatriotExosuitInventory(player, (EntityPatriotExosuit)entity);
+            }
         }
         return null;
     }
@@ -31,6 +38,10 @@ public class GuiHandler implements IGuiHandler
             if (entity instanceof EntityMessagerChicken) 
             {
                 return new GuiMessagerChickenInventory(player, (EntityMessagerChicken)entity);
+            }
+            if (entity instanceof EntityPatriotExosuit) 
+            {
+                return new GuiPatriotExosuitInventory(player, (EntityPatriotExosuit)entity);
             }
         }
         return null;

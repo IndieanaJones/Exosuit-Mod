@@ -2,15 +2,15 @@ package jones.exosuitmod.client.gui.container;
 
 import jones.exosuitmod.ExosuitMod;
 import jones.exosuitmod.entity.AbstractExosuit;
-import jones.exosuitmod.entity.EntityMessagerChicken;
-import jones.exosuitmod.inventory.container.ContainerMessagerChickenInventory;
+import jones.exosuitmod.entity.EntityPatriotExosuit;
+import jones.exosuitmod.inventory.container.ContainerPatriotExosuitInventory;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 
-public class GuiMessagerChickenInventory extends GuiContainer 
+public class GuiPatriotExosuitInventory extends GuiContainer 
 {
     private String name;
     private AbstractExosuit exosuit;
@@ -21,9 +21,9 @@ public class GuiMessagerChickenInventory extends GuiContainer
     private int guiSizeY = 250;
     private static final ResourceLocation EXOSUIT_INVENTORY_UI = new ResourceLocation(ExosuitMod.MODID + ":textures/client/gui/inventory/exosuitnew.png");
 
-    public GuiMessagerChickenInventory(EntityPlayer player, EntityMessagerChicken mob) 
+    public GuiPatriotExosuitInventory(EntityPlayer player, EntityPatriotExosuit mob) 
     {
-        super(new ContainerMessagerChickenInventory(player, mob));
+        super(new ContainerPatriotExosuitInventory(player, mob));
         this.name = mob.getName();
         exosuit = mob;
     }
@@ -34,13 +34,7 @@ public class GuiMessagerChickenInventory extends GuiContainer
         int xPos = (this.width - this.guiSizeX) / 2;
         int yPos = (this.height - this.guiSizeY) / 2;
         this.drawTexturedModalRect(xPos, yPos, 0, 0, this.guiSizeX, this.guiSizeY);
-        //Egg upgrade slot
-        this.drawTexturedModalRect(xPos + 8, yPos + 110, 194, 0, 18, 18);
-        //Double jump upgrade slot
-        this.drawTexturedModalRect(xPos + 26, yPos + 110, 212, 0, 18, 18);
-        //Speed upgrade slot
-        this.drawTexturedModalRect(xPos + 44, yPos + 110, 230, 0, 18, 18);
-        GuiInventory.drawEntityOnScreen(xPos + 87, yPos + 70, 40, (float)(xPos + 87) - this.mousePosX, (float)(yPos + 70) - this.mousePosY, this.exosuit);
+        GuiInventory.drawEntityOnScreen(xPos + 87, yPos + 70, 10, (float)(xPos + 87) - this.mousePosX, (float)(yPos + 70) - this.mousePosY, this.exosuit);
     }
 
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) 

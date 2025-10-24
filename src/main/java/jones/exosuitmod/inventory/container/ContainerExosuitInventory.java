@@ -26,14 +26,14 @@ public class ContainerExosuitInventory extends Container
         {
             for (int col = 0; col < 9; col++) 
             {
-                this.addSlotToContainer(new Slot(player.inventory, col + row * 9 + 9, 8 + col * 18, 84 + row * 18));
+                this.addSlotToContainer(new Slot(player.inventory, col + row * 9 + 9, 8 + col * 18, 126 + row * 18));
             }
         }
 
         // Add player's hotbar slots
         for (int i = 0; i < 9; i++) 
         {
-            this.addSlotToContainer(new Slot(player.inventory, i, 8 + i * 18, 142));
+            this.addSlotToContainer(new Slot(player.inventory, i, 8 + i * 18, 184));
         }
     }
 
