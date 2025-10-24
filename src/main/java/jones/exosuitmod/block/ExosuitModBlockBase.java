@@ -9,14 +9,14 @@ import net.minecraft.item.ItemBlock;
 public class ExosuitModBlockBase extends Block
 {
 
-    public ExosuitModBlockBase(String name) 
+    public ExosuitModBlockBase(String name, Material mat, float hard, float resist, String harvestTool, int harvestStrength) 
     {
-        super(Material.ROCK); // Choose a material (e.g. WOOD, IRON, GROUND, etc.)
-        setRegistryName(name); // Registry name (must be unique)
-        setUnlocalizedName(name); // Used for translation keys
-        setHardness(2.0F);
-        setResistance(10.0F);
-        setHarvestLevel("pickaxe", 1); // Requires an iron pickaxe or better
+        super(mat);
+        setRegistryName(name);
+        setUnlocalizedName(name);
+        setHardness(hard);
+        setResistance(resist);
+        setHarvestLevel(harvestTool, harvestStrength);
         setLightLevel(0.0F); // Light emission
         this.setCreativeTab(ExosuitModCreativeTab.INSTANCE);
 

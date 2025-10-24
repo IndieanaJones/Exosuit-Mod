@@ -18,6 +18,8 @@ public class ItemInit
 
     public static final ExosuitModSpawnItem PATRIOT_EXOSUIT_ITEM = new ExosuitModSpawnItem("patriot_exosuit", "A Patriot Exosuit, equipped with minigun and rocket launcher.");
 
+    public static final ExosuitModItemBase MECHANICAL_SCRAP = new ExosuitModItemBase("mechanical_scrap", "A component used for making exosuits.", 64);
+
     public static final ExosuitModItemBase EXOSUIT_MINIGUN = new ExosuitModItemBase("exosuit_minigun", "A component for crafting exosuits.");
     public static final ExosuitModItemBase EXOSUIT_ROCKET_LAUNCHER = new ExosuitModItemBase("exosuit_rocket_launcher", "A component for crafting exosuits.");
     public static final ExosuitModItemBase LARGE_EXOSUIT_BODY = new ExosuitModItemBase("large_exosuit_body", "A component for crafting exosuits.");

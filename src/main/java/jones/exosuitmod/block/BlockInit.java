@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.event.ModelRegistryEvent;
@@ -17,7 +18,7 @@ public class BlockInit
 {
     public static final List<Block> BLOCKS = new ArrayList<Block>();
 
-    public static final ExosuitModBlockBase MECHANICAL_SCRAP_BLOCK = new ExosuitModBlockBase("mechanical_scrap_block");
+    public static final ExosuitModBlockBase MECHANICAL_SCRAP_BLOCK = new MechanicalScrapOre("mechanical_scrap_block", Material.ROCK, 2, 10, "pickaxe", 2);
 
 	@SubscribeEvent
     public static void registerBlocks(RegistryEvent.Register<Block> event) 

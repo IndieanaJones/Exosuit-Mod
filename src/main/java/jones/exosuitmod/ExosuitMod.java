@@ -3,10 +3,12 @@ package jones.exosuitmod;
 import jones.exosuitmod.event.GuiHandler;
 //import jones.exosuitmod.keybindings.KeybindingInit;
 import jones.exosuitmod.network.PacketInit;
+import jones.exosuitmod.world.OreGenerator;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 @Mod(modid = ExosuitMod.MODID, useMetadata = true)
 public class ExosuitMod
@@ -23,6 +25,7 @@ public class ExosuitMod
     {
     	PacketInit.registerMessages(event);
         NetworkRegistry.INSTANCE.registerGuiHandler(ExosuitMod.instance, new GuiHandler());
+        GameRegistry.registerWorldGenerator(new OreGenerator(), 0);
     }
 
     @Mod.EventHandler

@@ -4,7 +4,7 @@
     [
         "aaa",
         "axx",
-        "axx"
+        "axb"
     ],
     "key":
     {
@@ -15,6 +15,10 @@
         "a":
         {
             "item": "minecraft:tnt"
+        },
+       "b":
+        {
+            "item": "exosuitmod:mechanical_scrap"
         }
     },
     "result":
