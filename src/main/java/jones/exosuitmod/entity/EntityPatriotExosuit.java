@@ -9,6 +9,7 @@ import jones.exosuitmod.inventory.ExosuitInventory;
 import jones.exosuitmod.item.ItemInit;
 import jones.exosuitmod.sound.SoundHandler;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GlStateManager;
@@ -287,6 +288,8 @@ public class EntityPatriotExosuit extends AbstractExosuit
             if (rider != null && !this.world.isRemote && this.onGround && Math.abs(rider.moveForward) + Math.abs(rider.moveStrafing) > 0) 
             {
                 stompNearbyEntities();
+                if(this.ticksExisted % 20 == 0)
+                    breakNearbyLeaves();
             }
         }
     }
@@ -307,6 +310,29 @@ public class EntityPatriotExosuit extends AbstractExosuit
         {
             // Apply damage
             entity.attackEntityFrom(DamageSource.causeMobDamage(this), 6.0F);
+        }
+    }
+
+    private void breakNearbyLeaves() 
+    {
+        BlockPos mobPos = new BlockPos(this.posX, this.posY, this.posZ);
+
+        for (int x = (int)-this.width; x <= this.width; x++) 
+        {
+            for (int y = -1; y <= this.height; y++) 
+            {
+                for (int z = (int)-this.width; z <= this.width; z++) 
+                {
+                    BlockPos checkPos = mobPos.add(x, y, z);
+                    IBlockState state = world.getBlockState(checkPos);
+                    Block block = state.getBlock();
+
+                    if (block.isLeaves(state, world, checkPos)) 
+                    {
+                        world.destroyBlock(checkPos, false);
+                    }
+                }
+            }
         }
     }
 
