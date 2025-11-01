@@ -2,6 +2,7 @@ package jones.exosuitmod.event;
 
 import jones.exosuitmod.client.gui.basicui.ExosuitArmorOverlay;
 import jones.exosuitmod.client.gui.basicui.ExosuitCooldownOverlay;
+import jones.exosuitmod.client.gui.basicui.ExosuitEnergyOverlay;
 import jones.exosuitmod.client.gui.basicui.ExosuitHealthbarOverlay;
 import jones.exosuitmod.entity.AbstractExosuit;
 import jones.exosuitmod.entity.render.AdvancedEntityTextureHandler;
@@ -79,6 +80,7 @@ public class EventRenderHandler
         else if(event.getType() == ElementType.HOTBAR)
         {
             ExosuitHealthbarOverlay.INSTANCE.renderHUD(event.getResolution(), player);
+            ExosuitEnergyOverlay.INSTANCE.renderHUD(event.getResolution(), player);
             ExosuitCooldownOverlay.INSTANCE.renderHUD(event.getResolution(), player);
             ExosuitArmorOverlay.INSTANCE.renderHUD(event.getResolution(), player);
         }

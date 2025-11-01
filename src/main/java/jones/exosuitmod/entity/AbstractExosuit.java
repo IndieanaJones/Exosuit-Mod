@@ -42,6 +42,9 @@ public class AbstractExosuit extends EntityCreature implements IInventoryChanged
     private static final DataParameter<Integer> MAX_LEFT_CLICK_COOLDOWN = EntityDataManager.<Integer>createKey(AbstractExosuit.class, DataSerializers.VARINT);
     private static final DataParameter<Integer> MAX_RIGHT_CLICK_COOLDOWN = EntityDataManager.<Integer>createKey(AbstractExosuit.class, DataSerializers.VARINT);
     private static final DataParameter<Integer> MAX_MIDAIR_JUMPS = EntityDataManager.<Integer>createKey(AbstractExosuit.class, DataSerializers.VARINT);
+
+    private static final DataParameter<Float> MAX_ENERGY = EntityDataManager.<Float>createKey(AbstractExosuit.class, DataSerializers.FLOAT);
+    private static final DataParameter<Float> CURRENT_ENERGY = EntityDataManager.<Float>createKey(AbstractExosuit.class, DataSerializers.FLOAT);
     
     public float currentMidairJumps = 0;
 
@@ -64,6 +67,9 @@ public class AbstractExosuit extends EntityCreature implements IInventoryChanged
         this.dataManager.register(MAX_LEFT_CLICK_COOLDOWN, Integer.valueOf(0));
         this.dataManager.register(MAX_RIGHT_CLICK_COOLDOWN, Integer.valueOf(0));
         this.dataManager.register(MAX_MIDAIR_JUMPS, Integer.valueOf(0));
+
+        this.dataManager.register(MAX_ENERGY, Float.valueOf(100));
+        this.dataManager.register(CURRENT_ENERGY, Float.valueOf(100));
     }
 
     public void applyEntityAttributes()
@@ -466,6 +472,27 @@ public class AbstractExosuit extends EntityCreature implements IInventoryChanged
     {
         return this.dataManager.get(MAX_MIDAIR_JUMPS).intValue();
     }
+
+    public void setCurrentEnergy(int value) 
+    {
+        this.dataManager.set(CURRENT_ENERGY, Float.valueOf(value));
+    }
+    
+    public int getCurrentEnergy() 
+    {
+        return this.dataManager.get(CURRENT_ENERGY).intValue();
+    }
+
+    public void setMaxEnergy(float value) 
+    {
+        this.dataManager.set(CURRENT_ENERGY, Float.valueOf(value));
+    }
+    
+    public float getMaxEnergy() 
+    {
+        return this.dataManager.get(CURRENT_ENERGY);
+    }
+
 
     public int getTextureLength()
     {

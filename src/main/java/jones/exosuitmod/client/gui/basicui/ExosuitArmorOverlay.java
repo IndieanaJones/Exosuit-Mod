@@ -17,7 +17,7 @@ public class ExosuitArmorOverlay extends Gui
 
     public static final ExosuitArmorOverlay INSTANCE = new ExosuitArmorOverlay();
 
-    public static int armorbar_height = 39;
+    public static int armorbar_height = 49;
 
 	@SideOnly(Side.CLIENT)
 	public void renderHUD(ScaledResolution resolution, EntityPlayer player) 
@@ -25,7 +25,7 @@ public class ExosuitArmorOverlay extends Gui
         Entity tmp = player.getRidingEntity();
         if (!(tmp instanceof EntityLivingBase)) return;
 
-        int right_align = resolution.getScaledWidth() / 2;
+        int right_align = resolution.getScaledWidth() / 2 + 10;
         int top = resolution.getScaledHeight() - armorbar_height;
 
         Minecraft.getMinecraft().getTextureManager().bindTexture(ICONS);

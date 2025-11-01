@@ -83,11 +83,6 @@ public class EntityPatriotExosuit extends AbstractExosuit
         this.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(1.0D);
     }
 
-    public boolean shouldRender()
-    {
-        return isMountJumping;
-    }
-
     public void onLeftClickPressed(boolean pressed)
     {
         if(this.world.isRemote)
@@ -296,7 +291,7 @@ public class EntityPatriotExosuit extends AbstractExosuit
 
     public void stompNearbyEntities()
     {
-        double radius = 0.1D;
+        double radius = 0.35D;
 
         if(!this.isBeingRidden())
             return;
