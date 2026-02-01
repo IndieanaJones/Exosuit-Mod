@@ -83,7 +83,7 @@ public class EntityPatriotBullet extends EntityFireball
                         target = (Entity) part.parent;
                 }
                 target.hurtResistantTime = 0;
-                target.attackEntityFrom(DamageSource.causeThrownDamage(this, this.shootingEntity), 1.5F);
+                target.attackEntityFrom(DamageSource.causeThrownDamage(this, this.shootingEntity), 2.5F);
                 target.motionX *= 0.5;  // reduce horizontal push
                 target.motionZ *= 0.5;
                 this.applyEnchantments(this.shootingEntity, target);

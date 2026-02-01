@@ -42,9 +42,11 @@ public class AbstractExosuit extends EntityCreature implements IInventoryChanged
     private static final DataParameter<Integer> MAX_LEFT_CLICK_COOLDOWN = EntityDataManager.<Integer>createKey(AbstractExosuit.class, DataSerializers.VARINT);
     private static final DataParameter<Integer> MAX_RIGHT_CLICK_COOLDOWN = EntityDataManager.<Integer>createKey(AbstractExosuit.class, DataSerializers.VARINT);
     private static final DataParameter<Integer> MAX_MIDAIR_JUMPS = EntityDataManager.<Integer>createKey(AbstractExosuit.class, DataSerializers.VARINT);
+    private static final DataParameter<Integer> ENERGY_REGEN_COOLDOWN = EntityDataManager.<Integer>createKey(AbstractExosuit.class, DataSerializers.VARINT);
 
     private static final DataParameter<Float> MAX_ENERGY = EntityDataManager.<Float>createKey(AbstractExosuit.class, DataSerializers.FLOAT);
     private static final DataParameter<Float> CURRENT_ENERGY = EntityDataManager.<Float>createKey(AbstractExosuit.class, DataSerializers.FLOAT);
+    private static final DataParameter<Float> ENERGY_REGEN = EntityDataManager.<Float>createKey(AbstractExosuit.class, DataSerializers.FLOAT);
     
     public float currentMidairJumps = 0;
 
@@ -67,9 +69,11 @@ public class AbstractExosuit extends EntityCreature implements IInventoryChanged
         this.dataManager.register(MAX_LEFT_CLICK_COOLDOWN, Integer.valueOf(0));
         this.dataManager.register(MAX_RIGHT_CLICK_COOLDOWN, Integer.valueOf(0));
         this.dataManager.register(MAX_MIDAIR_JUMPS, Integer.valueOf(0));
+        this.dataManager.register(ENERGY_REGEN_COOLDOWN, Integer.valueOf(0));
 
         this.dataManager.register(MAX_ENERGY, Float.valueOf(100));
         this.dataManager.register(CURRENT_ENERGY, Float.valueOf(100));
+        this.dataManager.register(ENERGY_REGEN, Float.valueOf(0.25F));
     }
 
     public void applyEntityAttributes()
@@ -170,8 +174,8 @@ public class AbstractExosuit extends EntityCreature implements IInventoryChanged
     public void onLivingUpdate()
     {
         super.onLivingUpdate();
+        handleEnergyRegen();
 
-    
         if(lastTimeHitCountdown > 0)
             lastTimeHitCountdown -= 1;
 
@@ -179,6 +183,20 @@ public class AbstractExosuit extends EntityCreature implements IInventoryChanged
             leftClickCooldown--;
         if(rightClickCooldown > 0)
             rightClickCooldown--;
+    }
+
+    public void handleEnergyRegen()
+    {
+        if(this.world.isRemote)
+            return;
+        if(getEnergyRegenCooldown() > 0)
+        {
+            setEnergyRegenCooldown(Math.max(0, getEnergyRegenCooldown() - 1));
+            return;
+        }
+        if(getCurrentEnergy() >= getMaxEnergy())
+            return;
+        setCurrentEnergy(Math.min(getMaxEnergy(), getCurrentEnergy() + getEnergyRegen()));
     }
 
     public boolean canDespawn()
@@ -473,26 +491,45 @@ public class AbstractExosuit extends EntityCreature implements IInventoryChanged
         return this.dataManager.get(MAX_MIDAIR_JUMPS).intValue();
     }
 
-    public void setCurrentEnergy(int value) 
+    public void setCurrentEnergy(float value) 
     {
-        this.dataManager.set(CURRENT_ENERGY, Float.valueOf(value));
+        this.dataManager.set(CURRENT_ENERGY, Float.valueOf(Math.max(Math.min(getMaxEnergy(), value), 0)));
     }
     
-    public int getCurrentEnergy() 
-    {
-        return this.dataManager.get(CURRENT_ENERGY).intValue();
-    }
-
-    public void setMaxEnergy(float value) 
-    {
-        this.dataManager.set(CURRENT_ENERGY, Float.valueOf(value));
-    }
-    
-    public float getMaxEnergy() 
+    public float getCurrentEnergy() 
     {
         return this.dataManager.get(CURRENT_ENERGY);
     }
 
+    public void setMaxEnergy(float value) 
+    {
+        this.dataManager.set(MAX_ENERGY, Float.valueOf(value));
+    }
+    
+    public float getMaxEnergy() 
+    {
+        return this.dataManager.get(MAX_ENERGY);
+    }
+
+    public void setEnergyRegen(float value) 
+    {
+        this.dataManager.set(ENERGY_REGEN, Float.valueOf(value));
+    }
+    
+    public float getEnergyRegen() 
+    {
+        return this.dataManager.get(ENERGY_REGEN);
+    }
+
+    public void setEnergyRegenCooldown(int value) 
+    {
+        this.dataManager.set(ENERGY_REGEN_COOLDOWN, Integer.valueOf(value));
+    }
+    
+    public int getEnergyRegenCooldown() 
+    {
+        return this.dataManager.get(ENERGY_REGEN_COOLDOWN);
+    }
 
     public int getTextureLength()
     {

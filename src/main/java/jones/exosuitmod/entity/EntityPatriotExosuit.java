@@ -67,7 +67,7 @@ public class EntityPatriotExosuit extends AbstractExosuit
     public void entityInit()
     {
         super.entityInit();
-        this.setMaxLeftClickCooldown(200);
+        this.setMaxLeftClickCooldown(100);
         this.setMaxRightClickCooldown(0);
         this.dataManager.register(MINIGUN_SPINNING, false);
         this.dataManager.register(NIGHTVISION_UPGRADE_STATUS, Integer.valueOf(0));
@@ -87,7 +87,7 @@ public class EntityPatriotExosuit extends AbstractExosuit
     {
         if(this.world.isRemote)
             return;
-        if(pressed && leftClickCooldown <= 0)
+        if(pressed && leftClickCooldown <= 0 && getCurrentEnergy() > 50)
         {
             this.shootRocketLauncherProjectile();
             updateCooldown("left", this.getMaxLeftClickCooldown(), true);
@@ -176,7 +176,7 @@ public class EntityPatriotExosuit extends AbstractExosuit
         super.onLivingUpdate();
         if(!this.world.isRemote)
         {
-            this.setMinigunSpinning(this.rightClickPressed);
+            this.setMinigunSpinning(this.rightClickPressed && this.getCurrentEnergy() > 2);
             this.ticksUntilNextMinigunBullet = Math.max(this.ticksUntilNextMinigunBullet - 1, 0);
         }
         this.minigunRotation = Math.max(0, Math.min(this.minigunRotation + (this.getMinigunSpinning() ? 5F : -5F), 100));
@@ -364,7 +364,8 @@ public class EntityPatriotExosuit extends AbstractExosuit
         fireball.posY = firePosition.y;
         fireball.posZ = firePosition.z;
         this.world.spawnEntity((Entity)fireball);
-
+        this.setCurrentEnergy(this.getCurrentEnergy() - 2);
+        this.setEnergyRegenCooldown(40);
         this.world.playSound((EntityPlayer) null, this.posX, this.posY, this.posZ, SoundHandler.EXOSUIT_MINIGUN_FIRE, this.getSoundCategory(), 0.25F, 1.0F + (this.getRNG().nextFloat() - this.getRNG().nextFloat()) * 0.2F);
     }
 
@@ -401,7 +402,8 @@ public class EntityPatriotExosuit extends AbstractExosuit
         fireball.posY = firePosition.y;
         fireball.posZ = firePosition.z;
         this.world.spawnEntity((Entity)fireball);
-
+        this.setCurrentEnergy(this.getCurrentEnergy() - 50);
+        this.setEnergyRegenCooldown(40);
         this.world.playSound((EntityPlayer) null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_FIREWORK_LAUNCH, this.getSoundCategory(), 1.0F, 1.0F + (this.getRNG().nextFloat() - this.getRNG().nextFloat()) * 0.2F);
     }
 

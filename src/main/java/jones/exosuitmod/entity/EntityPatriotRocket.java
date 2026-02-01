@@ -82,7 +82,7 @@ public class EntityPatriotRocket extends EntityFireball
                     if (part.parent != null && part.parent instanceof Entity)
                         target = (Entity) part.parent;
                 }
-                target.attackEntityFrom(DamageSource.causeThrownDamage(this, this.shootingEntity), 4.0F);
+                target.attackEntityFrom(DamageSource.causeThrownDamage(this, this.shootingEntity), 25.0F);
                 this.applyEnchantments(this.shootingEntity, target);
             }
 
