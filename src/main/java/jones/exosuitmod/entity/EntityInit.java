@@ -13,7 +13,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.util.ResourceLocation;
 import jones.exosuitmod.ExosuitMod;
 import jones.exosuitmod.entity.render.RenderMessagerChicken;
+import jones.exosuitmod.entity.render.RenderPatriotBullet;
 import jones.exosuitmod.entity.render.RenderPatriotExosuit;
+import jones.exosuitmod.entity.render.RenderPatriotRocket;
 import jones.exosuitmod.item.ItemInit;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.Render;
@@ -75,19 +77,21 @@ public class EntityInit
 
         RenderingRegistry.registerEntityRenderingHandler(EntityPatriotBullet.class, new IRenderFactory<EntityPatriotBullet>() 
         {
-            @SuppressWarnings({ "rawtypes", "unchecked" })
+            //@SuppressWarnings({ "rawtypes", "unchecked" })
             public Render<? super EntityPatriotBullet> createRenderFor(final RenderManager manager) 
             {
-                return (Render<? super EntityPatriotBullet>)new RenderSnowball(manager, ItemInit.PATRIOT_BULLET_ITEM, Minecraft.getMinecraft().getRenderItem());
+                //return (Render<? super EntityPatriotBullet>)new RenderSnowball(manager, ItemInit.PATRIOT_BULLET_ITEM, Minecraft.getMinecraft().getRenderItem());
+                return (Render<? super EntityPatriotBullet>)new RenderPatriotBullet(manager);
             }
         });
 
         RenderingRegistry.registerEntityRenderingHandler(EntityPatriotRocket.class, new IRenderFactory<EntityPatriotRocket>() 
         {
-            @SuppressWarnings({ "rawtypes", "unchecked" })
+           //@SuppressWarnings({ "rawtypes", "unchecked" })
             public Render<? super EntityPatriotRocket> createRenderFor(final RenderManager manager) 
             {
-                return (Render<? super EntityPatriotRocket>)new RenderSnowball(manager, ItemInit.PATRIOT_ROCKET_ITEM, Minecraft.getMinecraft().getRenderItem());
+                //return (Render<? super EntityPatriotRocket>)new RenderSnowball(manager, ItemInit.PATRIOT_ROCKET_ITEM, Minecraft.getMinecraft().getRenderItem());
+                return (Render<? super EntityPatriotRocket>)new RenderPatriotRocket(manager);
             }
         });
     }

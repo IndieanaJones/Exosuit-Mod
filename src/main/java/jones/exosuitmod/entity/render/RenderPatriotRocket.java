@@ -1,8 +1,8 @@
 package jones.exosuitmod.entity.render;
 
 import jones.exosuitmod.ExosuitMod;
-import jones.exosuitmod.entity.EntityPatriotBullet;
-import jones.exosuitmod.entity.model.ModelPatriotBullet;
+import jones.exosuitmod.entity.EntityPatriotRocket;
+import jones.exosuitmod.entity.model.ModelPatriotRocket;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -11,18 +11,18 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class RenderPatriotBullet extends Render<EntityPatriotBullet> 
+public class RenderPatriotRocket extends Render<EntityPatriotRocket> 
 {
-   private static final ResourceLocation BULLET_TEXTURES = new ResourceLocation(ExosuitMod.MODID + ":textures/entity/patriot_bullet/patriot_bullet.png");
-   private final ModelPatriotBullet bulletModel = new ModelPatriotBullet();
+   private static final ResourceLocation ROCKET_TEXTURES = new ResourceLocation(ExosuitMod.MODID + ":textures/entity/patriot_rocket/patriot_rocket.png");
+   private final ModelPatriotRocket rocketModel = new ModelPatriotRocket();
 
-   public RenderPatriotBullet(RenderManager renderManager) 
+   public RenderPatriotRocket(RenderManager renderManager) 
    {
       super(renderManager);
    }
 
     @Override
-    public void doRender(EntityPatriotBullet entity, double x, double y, double z, float entityYaw, float partialTicks) 
+    public void doRender(EntityPatriotRocket entity, double x, double y, double z, float entityYaw, float partialTicks) 
     {
         GlStateManager.pushMatrix();
 
@@ -38,15 +38,16 @@ public class RenderPatriotBullet extends Render<EntityPatriotBullet>
 
         GlStateManager.rotate(-yaw, 0F, 1F, 0F);
         GlStateManager.rotate(pitch, 1F, 0F, 0F);
+        GlStateManager.rotate(180F, 0F, 1F, 0F);
 
         bindEntityTexture(entity);
-        bulletModel.render(entity, 0, 0, 0, 0, 0, 0.05f);
+        rocketModel.render(entity, 0, 0, 0, 0, 0, 0.05f);
 
         GlStateManager.popMatrix();
     }
 
-   protected ResourceLocation getEntityTexture(EntityPatriotBullet p_110775_1_) 
+   protected ResourceLocation getEntityTexture(EntityPatriotRocket p_110775_1_) 
     {
-        return BULLET_TEXTURES;
+        return ROCKET_TEXTURES;
     }
 }
