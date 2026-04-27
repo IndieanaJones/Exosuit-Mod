@@ -29,6 +29,9 @@ public class ItemInit
     public static final ExosuitModItemBase EXOSUIT_REPAIR_KIT = new ExosuitModItemBase("exosuit_repair_kit", "A repair kit for larger exosuits. Heals 10 hearts.\nConsumed on use.", 16);
 
     public static final ExosuitModItemBase EXOSUIT_NIGHTIVISON_UPGRADE = new ExosuitModItemBase("exosuit_nightvision_upgrade", "An upgrade for most exosuits.\nGrants night vision to the user while the exosuit is being used.");
+    public static final ExosuitModItemBase EXOSUIT_ENERGY_REGENERATION_MK1 = new ExosuitModItemBase("exosuit_energy_upgrade_mk1", "An upgrade for most exosuits.\nIncreases energy regeneration by 25%.");
+    public static final ExosuitModItemBase EXOSUIT_ENERGY_REGENERATION_MK2 = new ExosuitModItemBase("exosuit_energy_upgrade_mk2", "An upgrade for most exosuits.\nIncreases energy regeneration by 50%.");
+    public static final ExosuitModItemBase EXOSUIT_ENERGY_REGENERATION_MK3 = new ExosuitModItemBase("exosuit_energy_upgrade_mk3", "An upgrade for most exosuits.\nIncreases energy regeneration by 75%.");
 
     public static final ExosuitModItemBase EXOSUIT_EGG_UPGRADE_MK1 = new ExosuitModItemBase("exosuit_egg_upgrade_mk1", "An upgrade for the Messager Chicken.\nAllows eggs to be thrown as opposed to be laid, as well as greatly decreasing the cooldown.");
     public static final ExosuitModItemBase EXOSUIT_EGG_UPGRADE_MK2 = new ExosuitModItemBase("exosuit_egg_upgrade_mk2", "An upgrade for the Messager Chicken.\nThrown eggs now explode on contact.");
@@ -36,9 +39,6 @@ public class ItemInit
     public static final ExosuitModItemBase EXOSUIT_CHICKEN_DOUBLE_JUMP_MK1 = new ExosuitModItemBase("exosuit_chicken_double_jump_mk1", "An upgrade for the Messager Chicken.\nAllows a second jump to be performed mid-air. Jumps are recharged upon landing.\nIncompatible with Iron Feathers.");
     public static final ExosuitModItemBase EXOSUIT_CHICKEN_ARMOR_MK1 = new ExosuitModItemBase("exosuit_chicken_armor_mk1", "An upgrade for the Messager Chicken.\nProvides the Messager Chicken with 10 armor.\nIncompatible with Double Jump.");
     public static final ExosuitModItemBase EXOSUIT_EXPLOSIVE_EGG = new ExosuitModItemBase("exosuit_explosive_egg", "The sprite for the Messager Chicken's explosive egg.\nThis is just here for sprite purposes, you're not meant to get this normally.");
-
-    public static final ExosuitModItemBase PATRIOT_BULLET_ITEM = new ExosuitModItemBase("patriot_bullet", "The sprite for the Patriot's bullets.\nThis is just here for sprite purposes, you're not meant to get this normally.");
-    public static final ExosuitModItemBase PATRIOT_ROCKET_ITEM = new ExosuitModItemBase("patriot_rocket", "The sprite for the Patriot's rockets.\nThis is just here for sprite purposes, you're not meant to get this normally.");
 
 	@SubscribeEvent
     public static void registerItems(RegistryEvent.Register<Item> event) 

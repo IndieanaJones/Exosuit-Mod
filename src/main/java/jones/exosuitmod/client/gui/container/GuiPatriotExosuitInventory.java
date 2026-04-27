@@ -36,6 +36,8 @@ public class GuiPatriotExosuitInventory extends GuiContainer
         this.drawTexturedModalRect(xPos, yPos, 0, 0, this.guiSizeX, this.guiSizeY);
         //Night vision upgrade slot
         this.drawTexturedModalRect(xPos + 8, yPos + 110, 176, 18, 18, 18);
+        //Energy regen upgrade slot
+        this.drawTexturedModalRect(xPos + 26, yPos + 110, 194, 18, 18, 18);
         GuiInventory.drawEntityOnScreen(xPos + 87, yPos + 70, 10, (float)(xPos + 87) - this.mousePosX, (float)(yPos + 70) - this.mousePosY, this.exosuit);
     }
 

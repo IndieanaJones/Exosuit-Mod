@@ -50,8 +50,10 @@ public class EntityPatriotExosuit extends AbstractExosuit
     public int ticksUntilNextMinigunBullet = 0;
 
     public float oldNightVisionUpgradeStatus = 0;
+    public float oldEnergyRegenUpgradeStatus = 0;
 
     private static final DataParameter<Integer> NIGHTVISION_UPGRADE_STATUS = EntityDataManager.<Integer>createKey(EntityPatriotExosuit.class, DataSerializers.VARINT);
+    private static final DataParameter<Integer> ENERGY_UPGRADE_STATUS = EntityDataManager.<Integer>createKey(EntityPatriotExosuit.class, DataSerializers.VARINT);
 
     public EntityPatriotExosuit(World worldIn) 
     {
@@ -60,7 +62,7 @@ public class EntityPatriotExosuit extends AbstractExosuit
         this.stepHeight = 1;
         this.limbSwing = 1;
         this.strafeMultiplier = 0.9F;
-        this.inventory = new ExosuitInventory(1);
+        this.inventory = new ExosuitInventory(2);
         this.inventory.addInventoryChangeListener(this);
     }
 
@@ -71,6 +73,7 @@ public class EntityPatriotExosuit extends AbstractExosuit
         this.setMaxRightClickCooldown(0);
         this.dataManager.register(MINIGUN_SPINNING, false);
         this.dataManager.register(NIGHTVISION_UPGRADE_STATUS, Integer.valueOf(0));
+        this.dataManager.register(ENERGY_UPGRADE_STATUS, Integer.valueOf(0));
     }
 
     public void applyEntityAttributes()
@@ -154,6 +157,7 @@ public class EntityPatriotExosuit extends AbstractExosuit
     public void updateExosuitCapabilities()
     {
         ItemStack nightVisionUpgradeSlot = inventory.getStackInSlot(0);
+        ItemStack energyRegenUpgradeSlot = inventory.getStackInSlot(1);
 
         //Night vision
         if(nightVisionUpgradeSlot.getItem() == Items.AIR)
@@ -163,6 +167,28 @@ public class EntityPatriotExosuit extends AbstractExosuit
         else if(nightVisionUpgradeSlot.getItem() == ItemInit.EXOSUIT_NIGHTIVISON_UPGRADE)
         {
             this.setNightVisionUpgradeStatus(1);
+        }
+
+        //Energy Regen
+        if(energyRegenUpgradeSlot.getItem() == Items.AIR)
+        {
+            this.setEnergyUpgradeStatus(0);
+            this.setEnergyRegen(BASE_ENERGY_REGEN);
+        }
+        else if(energyRegenUpgradeSlot.getItem() == ItemInit.EXOSUIT_ENERGY_REGENERATION_MK1)
+        {
+            this.setEnergyUpgradeStatus(1);
+            this.setEnergyRegen(BASE_ENERGY_REGEN * 1.25F);
+        }
+        else if(energyRegenUpgradeSlot.getItem() == ItemInit.EXOSUIT_ENERGY_REGENERATION_MK2)
+        {
+            this.setEnergyUpgradeStatus(2);
+            this.setEnergyRegen(BASE_ENERGY_REGEN * 1.5F);
+        }
+        else if(energyRegenUpgradeSlot.getItem() == ItemInit.EXOSUIT_ENERGY_REGENERATION_MK3)
+        {
+            this.setEnergyUpgradeStatus(3);
+            this.setEnergyRegen(BASE_ENERGY_REGEN * 1.75F);
         }
     }
 
@@ -205,10 +231,18 @@ public class EntityPatriotExosuit extends AbstractExosuit
             rider.addPotionEffect(new PotionEffect(MobEffects.NIGHT_VISION, 300, 0, false, false));
         }
 
-        if(this.world.isRemote && (this.oldNightVisionUpgradeStatus != this.getNightVisionUpgradeStatus()))
+        if(this.world.isRemote)
         {
-            this.oldNightVisionUpgradeStatus = this.getNightVisionUpgradeStatus();
-            AdvancedEntityTextureHandler.INSTANCE.updateExosuitTexture(this);
+            if(this.oldNightVisionUpgradeStatus != this.getNightVisionUpgradeStatus())
+            {
+                this.oldNightVisionUpgradeStatus = this.getNightVisionUpgradeStatus();
+                AdvancedEntityTextureHandler.INSTANCE.updateExosuitTexture(this);
+            }
+            if(this.oldEnergyRegenUpgradeStatus != this.getEnergyUpgradeStatus())
+            {
+                this.oldEnergyRegenUpgradeStatus = this.getEnergyUpgradeStatus();
+                AdvancedEntityTextureHandler.INSTANCE.updateExosuitTexture(this);
+            }
         }
     }
 
@@ -479,7 +513,7 @@ public class EntityPatriotExosuit extends AbstractExosuit
 
     public int getTotalTextureLayers()
     {
-        return 2;
+        return 3;
     }
     
     @SideOnly(Side.CLIENT)
@@ -505,6 +539,28 @@ public class EntityPatriotExosuit extends AbstractExosuit
                     }
                 }
             }
+            case 2:
+            {
+                switch(this.getEnergyUpgradeStatus())
+                {
+                    case 1:
+                    {
+                        return new ResourceLocation(ExosuitMod.MODID + ":textures/entity/patriot_exosuit/patriot_exosuit_energyregen_mk1.png");
+                    }
+                    case 2:
+                    {
+                        return new ResourceLocation(ExosuitMod.MODID + ":textures/entity/patriot_exosuit/patriot_exosuit_energyregen_mk2.png");
+                    }
+                    case 3:
+                    {
+                        return new ResourceLocation(ExosuitMod.MODID + ":textures/entity/patriot_exosuit/patriot_exosuit_energyregen_mk3.png");
+                    }
+                    default:
+                    {
+                        return null;
+                    }
+                }
+            }
         }
         return null;
     }
@@ -522,5 +578,15 @@ public class EntityPatriotExosuit extends AbstractExosuit
     public int getNightVisionUpgradeStatus() 
     {
         return this.dataManager.get(NIGHTVISION_UPGRADE_STATUS).intValue();
+    }
+
+    public void setEnergyUpgradeStatus(int value) 
+    {
+        this.dataManager.set(ENERGY_UPGRADE_STATUS, Integer.valueOf(value));
+    }
+    
+    public int getEnergyUpgradeStatus() 
+    {
+        return this.dataManager.get(ENERGY_UPGRADE_STATUS).intValue();
     }
 }

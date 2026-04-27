@@ -58,6 +58,8 @@ public class AbstractExosuit extends EntityCreature implements IInventoryChanged
 
     public ExosuitInventory inventory;
 
+    public static float BASE_ENERGY_REGEN = 0.25f;
+
     public AbstractExosuit(World worldIn) 
     {
         super(worldIn);
