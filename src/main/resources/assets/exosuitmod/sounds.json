@@ -6,6 +6,13 @@
         "sounds": [{ "name": "exosuitmod:entity/exosuit/damage1", "stream": true }]
     },
 
+    "entity.exosuit.death":
+    {
+        "category": "entity",
+        "subtitle": "subtitles.entity.exosuit.death",
+        "sounds": [{ "name": "exosuitmod:entity/exosuit/death", "stream": true }]
+    },
+
     "entity.exosuit.step":
     {
         "category": "entity",

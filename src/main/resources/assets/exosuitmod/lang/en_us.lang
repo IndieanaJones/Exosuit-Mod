@@ -19,12 +19,16 @@ item.large_rotating_core.name=Large Rotating Core
 
 subtitles.entity.exosuit.step=Exosuit Walking
 subtitles.entity.exosuit.hurt=Exosuit Hurt
+subtitles.entity.exosuit.death=Exosuit Dies
 subtitles.entity.exosuit.repair=Exosuit Repairing
 subtitles.entity.exosuit.minigun_fire=Exosuit Minigun Shoots
 
 item.exosuit_repair_kit.name=Exosuit Repair Kit
 
 item.exosuit_nightvision_upgrade.name=Exosuit Upgrade: Night Vision
+item.exosuit_energy_upgrade_mk1.name=Exosuit Upgrade: Energy Regeneration MK1
+item.exosuit_energy_upgrade_mk2.name=Exosuit Upgrade: Energy Regeneration MK2
+item.exosuit_energy_upgrade_mk3.name=Exosuit Upgrade: Energy Regeneration MK3
 
 item.exosuit_egg_upgrade_mk1.name=Messager Chicken Upgrade: Egg Thrower Mk1
 item.exosuit_egg_upgrade_mk2.name=Messager Chicken Upgrade: Egg Thrower Mk2

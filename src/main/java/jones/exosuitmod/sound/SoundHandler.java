@@ -11,6 +11,7 @@ public class SoundHandler
 {
     public static SoundEvent EXOSUIT_STEP;
     public static SoundEvent EXOSUIT_HURT;
+    public static SoundEvent EXOSUIT_DEATH;
     public static SoundEvent EXOSUIT_REPAIR;
     public static SoundEvent EXOSUIT_MINIGUN_FIRE;
     
@@ -19,6 +20,7 @@ public class SoundHandler
     {
         EXOSUIT_STEP = registerSound("entity.exosuit.step", event);
         EXOSUIT_HURT = registerSound("entity.exosuit.hurt", event);
+        EXOSUIT_DEATH = registerSound("entity.exosuit.death", event);
         EXOSUIT_REPAIR = registerSound("entity.exosuit.repair", event);
         EXOSUIT_MINIGUN_FIRE = registerSound("entity.exosuit.minigun_fire", event);
     }
