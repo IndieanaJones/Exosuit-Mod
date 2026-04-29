@@ -280,7 +280,7 @@ public class EntityPatriotExosuit extends AbstractExosuit
 
     protected SoundEvent getDeathSound()
     {
-        return SoundEvents.ENTITY_IRONGOLEM_DEATH;
+        return SoundHandler.EXOSUIT_DEATH;
     }
 
     protected void playStepSound(BlockPos pos, Block blockIn)
@@ -391,15 +391,16 @@ public class EntityPatriotExosuit extends AbstractExosuit
         Vec3d crosshairPosition = this.getCrosshairTargetPosition(world);
         Vec3d direction = crosshairPosition.subtract(firePosition).normalize();
         final EntityPatriotBullet fireball = new EntityPatriotBullet(this.world, this, d2, d3, d4);
-        fireball.motionX = direction.x * 3 + this.rand.nextGaussian() * 0.007499999832361937D * (double)15;
-        fireball.motionY = direction.y * 3 + this.rand.nextGaussian() * 0.007499999832361937D * (double)15;
-        fireball.motionZ = direction.z * 3 + this.rand.nextGaussian() * 0.007499999832361937D * (double)15;
+        double randomSpread = 12;
+        fireball.motionX = direction.x * 3 + this.rand.nextGaussian() * 0.007499999832361937D * randomSpread;
+        fireball.motionY = direction.y * 3 + this.rand.nextGaussian() * 0.007499999832361937D * randomSpread;
+        fireball.motionZ = direction.z * 3 + this.rand.nextGaussian() * 0.007499999832361937D * randomSpread;
         fireball.posX = firePosition.x;
         fireball.posY = firePosition.y;
         fireball.posZ = firePosition.z;
         this.world.spawnEntity((Entity)fireball);
         this.setCurrentEnergy(this.getCurrentEnergy() - 2);
-        this.setEnergyRegenCooldown(40);
+        this.setEnergyRegenCooldown(20);
         this.world.playSound((EntityPlayer) null, this.posX, this.posY, this.posZ, SoundHandler.EXOSUIT_MINIGUN_FIRE, this.getSoundCategory(), 0.25F, 1.0F + (this.getRNG().nextFloat() - this.getRNG().nextFloat()) * 0.2F);
     }
 
